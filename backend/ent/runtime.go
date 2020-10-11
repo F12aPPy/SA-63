@@ -7,7 +7,7 @@ import (
 
 	"github.com/F12aPPy/app/ent/antenatal"
 	"github.com/F12aPPy/app/ent/babystatus"
-	"github.com/F12aPPy/app/ent/pregnant"
+	"github.com/F12aPPy/app/ent/patient"
 	"github.com/F12aPPy/app/ent/schema"
 	"github.com/F12aPPy/app/ent/user"
 )
@@ -28,16 +28,16 @@ func init() {
 	babystatusDescSTATUSBABYNAME := babystatusFields[0].Descriptor()
 	// babystatus.STATUSBABYNAMEValidator is a validator for the "STATUS_BABY_NAME" field. It is called by the builders before save.
 	babystatus.STATUSBABYNAMEValidator = babystatusDescSTATUSBABYNAME.Validators[0].(func(string) error)
-	pregnantFields := schema.Pregnant{}.Fields()
-	_ = pregnantFields
-	// pregnantDescPREGNANTNAME is the schema descriptor for PREGNANT_NAME field.
-	pregnantDescPREGNANTNAME := pregnantFields[0].Descriptor()
-	// pregnant.PREGNANTNAMEValidator is a validator for the "PREGNANT_NAME" field. It is called by the builders before save.
-	pregnant.PREGNANTNAMEValidator = pregnantDescPREGNANTNAME.Validators[0].(func(string) error)
-	// pregnantDescPREGNANTAGE is the schema descriptor for PREGNANT_AGE field.
-	pregnantDescPREGNANTAGE := pregnantFields[1].Descriptor()
-	// pregnant.PREGNANTAGEValidator is a validator for the "PREGNANT_AGE" field. It is called by the builders before save.
-	pregnant.PREGNANTAGEValidator = pregnantDescPREGNANTAGE.Validators[0].(func(int) error)
+	patientFields := schema.Patient{}.Fields()
+	_ = patientFields
+	// patientDescPatientName is the schema descriptor for patient_name field.
+	patientDescPatientName := patientFields[0].Descriptor()
+	// patient.PatientNameValidator is a validator for the "patient_name" field. It is called by the builders before save.
+	patient.PatientNameValidator = patientDescPatientName.Validators[0].(func(string) error)
+	// patientDescPatientAge is the schema descriptor for patient_age field.
+	patientDescPatientAge := patientFields[1].Descriptor()
+	// patient.PatientAgeValidator is a validator for the "patient_age" field. It is called by the builders before save.
+	patient.PatientAgeValidator = patientDescPatientAge.Validators[0].(func(int) error)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescUSEREMAIL is the schema descriptor for USER_EMAIL field.

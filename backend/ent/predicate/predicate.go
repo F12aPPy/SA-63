@@ -12,8 +12,8 @@ type Antenatal func(*sql.Selector)
 // Babystatus is the predicate function for babystatus builders.
 type Babystatus func(*sql.Selector)
 
-// Pregnant is the predicate function for pregnant builders.
-type Pregnant func(*sql.Selector)
+// Patient is the predicate function for patient builders.
+type Patient func(*sql.Selector)
 
 // User is the predicate function for user builders.
 type User func(*sql.Selector)

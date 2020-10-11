@@ -13,7 +13,7 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "added_time", Type: field.TypeTime},
 		{Name: "babystatus_setstatus", Type: field.TypeInt, Nullable: true},
-		{Name: "pregnant_setmom", Type: field.TypeInt, Nullable: true},
+		{Name: "patient_setmom", Type: field.TypeInt, Nullable: true},
 		{Name: "user_care", Type: field.TypeInt, Nullable: true},
 	}
 	// AntenatalsTable holds the schema information for the "antenatals" table.
@@ -30,10 +30,10 @@ var (
 				OnDelete:   schema.SetNull,
 			},
 			{
-				Symbol:  "antenatals_pregnants_SETMOM",
+				Symbol:  "antenatals_patients_SETMOM",
 				Columns: []*schema.Column{AntenatalsColumns[3]},
 
-				RefColumns: []*schema.Column{PregnantsColumns[0]},
+				RefColumns: []*schema.Column{PatientsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
@@ -57,17 +57,17 @@ var (
 		PrimaryKey:  []*schema.Column{BabystatusesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
-	// PregnantsColumns holds the columns for the "pregnants" table.
-	PregnantsColumns = []*schema.Column{
+	// PatientsColumns holds the columns for the "patients" table.
+	PatientsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "pregnant_name", Type: field.TypeString},
-		{Name: "pregnant_age", Type: field.TypeInt},
+		{Name: "patient_name", Type: field.TypeString},
+		{Name: "patient_age", Type: field.TypeInt},
 	}
-	// PregnantsTable holds the schema information for the "pregnants" table.
-	PregnantsTable = &schema.Table{
-		Name:        "pregnants",
-		Columns:     PregnantsColumns,
-		PrimaryKey:  []*schema.Column{PregnantsColumns[0]},
+	// PatientsTable holds the schema information for the "patients" table.
+	PatientsTable = &schema.Table{
+		Name:        "patients",
+		Columns:     PatientsColumns,
+		PrimaryKey:  []*schema.Column{PatientsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
 	// UsersColumns holds the columns for the "users" table.
@@ -87,13 +87,13 @@ var (
 	Tables = []*schema.Table{
 		AntenatalsTable,
 		BabystatusesTable,
-		PregnantsTable,
+		PatientsTable,
 		UsersTable,
 	}
 )
 
 func init() {
 	AntenatalsTable.ForeignKeys[0].RefTable = BabystatusesTable
-	AntenatalsTable.ForeignKeys[1].RefTable = PregnantsTable
+	AntenatalsTable.ForeignKeys[1].RefTable = PatientsTable
 	AntenatalsTable.ForeignKeys[2].RefTable = UsersTable
 }

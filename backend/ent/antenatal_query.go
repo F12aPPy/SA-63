@@ -10,8 +10,8 @@ import (
 
 	"github.com/F12aPPy/app/ent/antenatal"
 	"github.com/F12aPPy/app/ent/babystatus"
+	"github.com/F12aPPy/app/ent/patient"
 	"github.com/F12aPPy/app/ent/predicate"
-	"github.com/F12aPPy/app/ent/pregnant"
 	"github.com/F12aPPy/app/ent/user"
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
@@ -27,7 +27,7 @@ type AntenatalQuery struct {
 	unique     []string
 	predicates []predicate.Antenatal
 	// eager-loading edges.
-	withGETMOM    *PregnantQuery
+	withGETMOM    *PatientQuery
 	withTAKECARE  *UserQuery
 	withGETSTATUS *BabystatusQuery
 	withFKs       bool
@@ -61,15 +61,15 @@ func (aq *AntenatalQuery) Order(o ...OrderFunc) *AntenatalQuery {
 }
 
 // QueryGETMOM chains the current query on the GETMOM edge.
-func (aq *AntenatalQuery) QueryGETMOM() *PregnantQuery {
-	query := &PregnantQuery{config: aq.config}
+func (aq *AntenatalQuery) QueryGETMOM() *PatientQuery {
+	query := &PatientQuery{config: aq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := aq.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
 			sqlgraph.From(antenatal.Table, antenatal.FieldID, aq.sqlQuery()),
-			sqlgraph.To(pregnant.Table, pregnant.FieldID),
+			sqlgraph.To(patient.Table, patient.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, antenatal.GETMOMTable, antenatal.GETMOMColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(aq.driver.Dialect(), step)
@@ -295,8 +295,8 @@ func (aq *AntenatalQuery) Clone() *AntenatalQuery {
 
 //  WithGETMOM tells the query-builder to eager-loads the nodes that are connected to
 // the "GETMOM" edge. The optional arguments used to configure the query builder of the edge.
-func (aq *AntenatalQuery) WithGETMOM(opts ...func(*PregnantQuery)) *AntenatalQuery {
-	query := &PregnantQuery{config: aq.config}
+func (aq *AntenatalQuery) WithGETMOM(opts ...func(*PatientQuery)) *AntenatalQuery {
+	query := &PatientQuery{config: aq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
@@ -433,12 +433,12 @@ func (aq *AntenatalQuery) sqlAll(ctx context.Context) ([]*Antenatal, error) {
 		ids := make([]int, 0, len(nodes))
 		nodeids := make(map[int][]*Antenatal)
 		for i := range nodes {
-			if fk := nodes[i].pregnant_setmom; fk != nil {
+			if fk := nodes[i].patient_setmom; fk != nil {
 				ids = append(ids, *fk)
 				nodeids[*fk] = append(nodeids[*fk], nodes[i])
 			}
 		}
-		query.Where(pregnant.IDIn(ids...))
+		query.Where(patient.IDIn(ids...))
 		neighbors, err := query.All(ctx)
 		if err != nil {
 			return nil, err
@@ -446,7 +446,7 @@ func (aq *AntenatalQuery) sqlAll(ctx context.Context) ([]*Antenatal, error) {
 		for _, n := range neighbors {
 			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "pregnant_setmom" returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "patient_setmom" returned %v`, n.ID)
 			}
 			for i := range nodes {
 				nodes[i].Edges.GETMOM = n

@@ -9,7 +9,7 @@ import (
 
 	"github.com/F12aPPy/app/ent/antenatal"
 	"github.com/F12aPPy/app/ent/babystatus"
-	"github.com/F12aPPy/app/ent/pregnant"
+	"github.com/F12aPPy/app/ent/patient"
 	"github.com/F12aPPy/app/ent/user"
 	"github.com/facebookincubator/ent/dialect/sql"
 )
@@ -25,14 +25,14 @@ type Antenatal struct {
 	// The values are being populated by the AntenatalQuery when eager-loading is set.
 	Edges                AntenatalEdges `json:"edges"`
 	babystatus_setstatus *int
-	pregnant_setmom      *int
+	patient_setmom       *int
 	user_care            *int
 }
 
 // AntenatalEdges holds the relations/edges for other nodes in the graph.
 type AntenatalEdges struct {
 	// GETMOM holds the value of the GETMOM edge.
-	GETMOM *Pregnant
+	GETMOM *Patient
 	// TAKECARE holds the value of the TAKECARE edge.
 	TAKECARE *User
 	// GETSTATUS holds the value of the GETSTATUS edge.
@@ -44,12 +44,12 @@ type AntenatalEdges struct {
 
 // GETMOMOrErr returns the GETMOM value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e AntenatalEdges) GETMOMOrErr() (*Pregnant, error) {
+func (e AntenatalEdges) GETMOMOrErr() (*Patient, error) {
 	if e.loadedTypes[0] {
 		if e.GETMOM == nil {
 			// The edge GETMOM was loaded in eager-loading,
 			// but was not found.
-			return nil, &NotFoundError{label: pregnant.Label}
+			return nil, &NotFoundError{label: patient.Label}
 		}
 		return e.GETMOM, nil
 	}
@@ -96,7 +96,7 @@ func (*Antenatal) scanValues() []interface{} {
 func (*Antenatal) fkValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{}, // babystatus_setstatus
-		&sql.NullInt64{}, // pregnant_setmom
+		&sql.NullInt64{}, // patient_setmom
 		&sql.NullInt64{}, // user_care
 	}
 }
@@ -127,10 +127,10 @@ func (a *Antenatal) assignValues(values ...interface{}) error {
 			*a.babystatus_setstatus = int(value.Int64)
 		}
 		if value, ok := values[1].(*sql.NullInt64); !ok {
-			return fmt.Errorf("unexpected type %T for edge-field pregnant_setmom", value)
+			return fmt.Errorf("unexpected type %T for edge-field patient_setmom", value)
 		} else if value.Valid {
-			a.pregnant_setmom = new(int)
-			*a.pregnant_setmom = int(value.Int64)
+			a.patient_setmom = new(int)
+			*a.patient_setmom = int(value.Int64)
 		}
 		if value, ok := values[2].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field user_care", value)
@@ -143,7 +143,7 @@ func (a *Antenatal) assignValues(values ...interface{}) error {
 }
 
 // QueryGETMOM queries the GETMOM edge of the Antenatal.
-func (a *Antenatal) QueryGETMOM() *PregnantQuery {
+func (a *Antenatal) QueryGETMOM() *PatientQuery {
 	return (&AntenatalClient{config: a.config}).QueryGETMOM(a)
 }
 

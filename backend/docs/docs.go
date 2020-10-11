@@ -485,14 +485,14 @@ var doc = `{
                 }
             }
         },
-        "/pregnants": {
+        "/patients": {
             "get": {
-                "description": "list pregnant entities",
+                "description": "list patient entities",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "List pregnant entities",
-                "operationId": "list-pregnant",
+                "summary": "List patient entities",
+                "operationId": "list-patient",
                 "parameters": [
                     {
                         "type": "integer",
@@ -513,7 +513,7 @@ var doc = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/ent.Pregnant"
+                                "$ref": "#/definitions/ent.Patient"
                             }
                         }
                     },
@@ -532,23 +532,23 @@ var doc = `{
                 }
             },
             "post": {
-                "description": "Create pregnant",
+                "description": "Create patient",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Create pregnant",
-                "operationId": "create-pregnant",
+                "summary": "Create patient",
+                "operationId": "create-patient",
                 "parameters": [
                     {
-                        "description": "Pregnant entity",
-                        "name": "pregnant",
+                        "description": "Patient entity",
+                        "name": "patient",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/ent.Pregnant"
+                            "$ref": "#/definitions/ent.Patient"
                         }
                     }
                 ],
@@ -556,7 +556,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Pregnant"
+                            "$ref": "#/definitions/ent.Patient"
                         }
                     },
                     "400": {
@@ -574,18 +574,18 @@ var doc = `{
                 }
             }
         },
-        "/pregnants/{id}": {
+        "/patients/{id}": {
             "get": {
-                "description": "get pregnant by ID",
+                "description": "get patient by ID",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get a pregnant entity by ID",
-                "operationId": "get-pregnant",
+                "summary": "Get a patient entity by ID",
+                "operationId": "get-patient",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Pregnant ID",
+                        "description": "Patient ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -595,7 +595,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Pregnant"
+                            "$ref": "#/definitions/ent.Patient"
                         }
                     },
                     "400": {
@@ -619,30 +619,30 @@ var doc = `{
                 }
             },
             "put": {
-                "description": "update pregnant by ID",
+                "description": "update patient by ID",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Update a pregnant entity by ID",
-                "operationId": "update-pregnant",
+                "summary": "Update a patient entity by ID",
+                "operationId": "update-patient",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Pregnant ID",
+                        "description": "Patient ID",
                         "name": "id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "Pregnant entity",
-                        "name": "pregnant",
+                        "description": "Patient entity",
+                        "name": "patient",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/ent.Pregnant"
+                            "$ref": "#/definitions/ent.Patient"
                         }
                     }
                 ],
@@ -650,7 +650,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Pregnant"
+                            "$ref": "#/definitions/ent.Patient"
                         }
                     },
                     "400": {
@@ -668,16 +668,16 @@ var doc = `{
                 }
             },
             "delete": {
-                "description": "get pregnant by ID",
+                "description": "get patient by ID",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Delete a pregnant entity by ID",
-                "operationId": "delete-pregnant",
+                "summary": "Delete a patient entity by ID",
+                "operationId": "delete-patient",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Pregnant ID",
+                        "description": "Patient ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -963,7 +963,7 @@ var doc = `{
                 "getmom": {
                     "description": "GETMOM holds the value of the GETMOM edge.",
                     "type": "object",
-                    "$ref": "#/definitions/ent.Pregnant"
+                    "$ref": "#/definitions/ent.Patient"
                 },
                 "getstatus": {
                     "description": "GETSTATUS holds the value of the GETSTATUS edge.",
@@ -1007,29 +1007,29 @@ var doc = `{
                 }
             }
         },
-        "ent.Pregnant": {
+        "ent.Patient": {
             "type": "object",
             "properties": {
-                "PREGNANT_AGE": {
-                    "description": "PREGNANTAGE holds the value of the \"PREGNANT_AGE\" field.",
-                    "type": "integer"
-                },
-                "PREGNANT_NAME": {
-                    "description": "PREGNANTNAME holds the value of the \"PREGNANT_NAME\" field.",
-                    "type": "string"
-                },
                 "edges": {
-                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the PregnantQuery when eager-loading is set.",
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the PatientQuery when eager-loading is set.",
                     "type": "object",
-                    "$ref": "#/definitions/ent.PregnantEdges"
+                    "$ref": "#/definitions/ent.PatientEdges"
                 },
                 "id": {
                     "description": "ID of the ent.",
                     "type": "integer"
+                },
+                "patient_age": {
+                    "description": "PatientAge holds the value of the \"patient_age\" field.",
+                    "type": "integer"
+                },
+                "patient_name": {
+                    "description": "PatientName holds the value of the \"patient_name\" field.",
+                    "type": "string"
                 }
             }
         },
-        "ent.PregnantEdges": {
+        "ent.PatientEdges": {
             "type": "object",
             "properties": {
                 "setmom": {

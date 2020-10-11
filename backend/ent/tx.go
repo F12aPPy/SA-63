@@ -16,8 +16,8 @@ type Tx struct {
 	Antenatal *AntenatalClient
 	// Babystatus is the client for interacting with the Babystatus builders.
 	Babystatus *BabystatusClient
-	// Pregnant is the client for interacting with the Pregnant builders.
-	Pregnant *PregnantClient
+	// Patient is the client for interacting with the Patient builders.
+	Patient *PatientClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 
@@ -157,7 +157,7 @@ func (tx *Tx) Client() *Client {
 func (tx *Tx) init() {
 	tx.Antenatal = NewAntenatalClient(tx.config)
 	tx.Babystatus = NewBabystatusClient(tx.config)
-	tx.Pregnant = NewPregnantClient(tx.config)
+	tx.Patient = NewPatientClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 }
 

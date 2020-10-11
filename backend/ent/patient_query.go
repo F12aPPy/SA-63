@@ -10,21 +10,21 @@ import (
 	"math"
 
 	"github.com/F12aPPy/app/ent/antenatal"
+	"github.com/F12aPPy/app/ent/patient"
 	"github.com/F12aPPy/app/ent/predicate"
-	"github.com/F12aPPy/app/ent/pregnant"
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 )
 
-// PregnantQuery is the builder for querying Pregnant entities.
-type PregnantQuery struct {
+// PatientQuery is the builder for querying Patient entities.
+type PatientQuery struct {
 	config
 	limit      *int
 	offset     *int
 	order      []OrderFunc
 	unique     []string
-	predicates []predicate.Pregnant
+	predicates []predicate.Patient
 	// eager-loading edges.
 	withSETMOM *AntenatalQuery
 	// intermediate query (i.e. traversal path).
@@ -33,40 +33,40 @@ type PregnantQuery struct {
 }
 
 // Where adds a new predicate for the builder.
-func (pq *PregnantQuery) Where(ps ...predicate.Pregnant) *PregnantQuery {
+func (pq *PatientQuery) Where(ps ...predicate.Patient) *PatientQuery {
 	pq.predicates = append(pq.predicates, ps...)
 	return pq
 }
 
 // Limit adds a limit step to the query.
-func (pq *PregnantQuery) Limit(limit int) *PregnantQuery {
+func (pq *PatientQuery) Limit(limit int) *PatientQuery {
 	pq.limit = &limit
 	return pq
 }
 
 // Offset adds an offset step to the query.
-func (pq *PregnantQuery) Offset(offset int) *PregnantQuery {
+func (pq *PatientQuery) Offset(offset int) *PatientQuery {
 	pq.offset = &offset
 	return pq
 }
 
 // Order adds an order step to the query.
-func (pq *PregnantQuery) Order(o ...OrderFunc) *PregnantQuery {
+func (pq *PatientQuery) Order(o ...OrderFunc) *PatientQuery {
 	pq.order = append(pq.order, o...)
 	return pq
 }
 
 // QuerySETMOM chains the current query on the SETMOM edge.
-func (pq *PregnantQuery) QuerySETMOM() *AntenatalQuery {
+func (pq *PatientQuery) QuerySETMOM() *AntenatalQuery {
 	query := &AntenatalQuery{config: pq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := pq.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
-			sqlgraph.From(pregnant.Table, pregnant.FieldID, pq.sqlQuery()),
+			sqlgraph.From(patient.Table, patient.FieldID, pq.sqlQuery()),
 			sqlgraph.To(antenatal.Table, antenatal.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, pregnant.SETMOMTable, pregnant.SETMOMColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, patient.SETMOMTable, patient.SETMOMColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
 		return fromU, nil
@@ -74,42 +74,42 @@ func (pq *PregnantQuery) QuerySETMOM() *AntenatalQuery {
 	return query
 }
 
-// First returns the first Pregnant entity in the query. Returns *NotFoundError when no pregnant was found.
-func (pq *PregnantQuery) First(ctx context.Context) (*Pregnant, error) {
-	prs, err := pq.Limit(1).All(ctx)
+// First returns the first Patient entity in the query. Returns *NotFoundError when no patient was found.
+func (pq *PatientQuery) First(ctx context.Context) (*Patient, error) {
+	pas, err := pq.Limit(1).All(ctx)
 	if err != nil {
 		return nil, err
 	}
-	if len(prs) == 0 {
-		return nil, &NotFoundError{pregnant.Label}
+	if len(pas) == 0 {
+		return nil, &NotFoundError{patient.Label}
 	}
-	return prs[0], nil
+	return pas[0], nil
 }
 
 // FirstX is like First, but panics if an error occurs.
-func (pq *PregnantQuery) FirstX(ctx context.Context) *Pregnant {
-	pr, err := pq.First(ctx)
+func (pq *PatientQuery) FirstX(ctx context.Context) *Patient {
+	pa, err := pq.First(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
 	}
-	return pr
+	return pa
 }
 
-// FirstID returns the first Pregnant id in the query. Returns *NotFoundError when no id was found.
-func (pq *PregnantQuery) FirstID(ctx context.Context) (id int, err error) {
+// FirstID returns the first Patient id in the query. Returns *NotFoundError when no id was found.
+func (pq *PatientQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
 	if ids, err = pq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
 	if len(ids) == 0 {
-		err = &NotFoundError{pregnant.Label}
+		err = &NotFoundError{patient.Label}
 		return
 	}
 	return ids[0], nil
 }
 
 // FirstXID is like FirstID, but panics if an error occurs.
-func (pq *PregnantQuery) FirstXID(ctx context.Context) int {
+func (pq *PatientQuery) FirstXID(ctx context.Context) int {
 	id, err := pq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -117,33 +117,33 @@ func (pq *PregnantQuery) FirstXID(ctx context.Context) int {
 	return id
 }
 
-// Only returns the only Pregnant entity in the query, returns an error if not exactly one entity was returned.
-func (pq *PregnantQuery) Only(ctx context.Context) (*Pregnant, error) {
-	prs, err := pq.Limit(2).All(ctx)
+// Only returns the only Patient entity in the query, returns an error if not exactly one entity was returned.
+func (pq *PatientQuery) Only(ctx context.Context) (*Patient, error) {
+	pas, err := pq.Limit(2).All(ctx)
 	if err != nil {
 		return nil, err
 	}
-	switch len(prs) {
+	switch len(pas) {
 	case 1:
-		return prs[0], nil
+		return pas[0], nil
 	case 0:
-		return nil, &NotFoundError{pregnant.Label}
+		return nil, &NotFoundError{patient.Label}
 	default:
-		return nil, &NotSingularError{pregnant.Label}
+		return nil, &NotSingularError{patient.Label}
 	}
 }
 
 // OnlyX is like Only, but panics if an error occurs.
-func (pq *PregnantQuery) OnlyX(ctx context.Context) *Pregnant {
-	pr, err := pq.Only(ctx)
+func (pq *PatientQuery) OnlyX(ctx context.Context) *Patient {
+	pa, err := pq.Only(ctx)
 	if err != nil {
 		panic(err)
 	}
-	return pr
+	return pa
 }
 
-// OnlyID returns the only Pregnant id in the query, returns an error if not exactly one id was returned.
-func (pq *PregnantQuery) OnlyID(ctx context.Context) (id int, err error) {
+// OnlyID returns the only Patient id in the query, returns an error if not exactly one id was returned.
+func (pq *PatientQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
 	if ids, err = pq.Limit(2).IDs(ctx); err != nil {
 		return
@@ -152,15 +152,15 @@ func (pq *PregnantQuery) OnlyID(ctx context.Context) (id int, err error) {
 	case 1:
 		id = ids[0]
 	case 0:
-		err = &NotFoundError{pregnant.Label}
+		err = &NotFoundError{patient.Label}
 	default:
-		err = &NotSingularError{pregnant.Label}
+		err = &NotSingularError{patient.Label}
 	}
 	return
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (pq *PregnantQuery) OnlyIDX(ctx context.Context) int {
+func (pq *PatientQuery) OnlyIDX(ctx context.Context) int {
 	id, err := pq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -168,8 +168,8 @@ func (pq *PregnantQuery) OnlyIDX(ctx context.Context) int {
 	return id
 }
 
-// All executes the query and returns a list of Pregnants.
-func (pq *PregnantQuery) All(ctx context.Context) ([]*Pregnant, error) {
+// All executes the query and returns a list of Patients.
+func (pq *PatientQuery) All(ctx context.Context) ([]*Patient, error) {
 	if err := pq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
@@ -177,25 +177,25 @@ func (pq *PregnantQuery) All(ctx context.Context) ([]*Pregnant, error) {
 }
 
 // AllX is like All, but panics if an error occurs.
-func (pq *PregnantQuery) AllX(ctx context.Context) []*Pregnant {
-	prs, err := pq.All(ctx)
+func (pq *PatientQuery) AllX(ctx context.Context) []*Patient {
+	pas, err := pq.All(ctx)
 	if err != nil {
 		panic(err)
 	}
-	return prs
+	return pas
 }
 
-// IDs executes the query and returns a list of Pregnant ids.
-func (pq *PregnantQuery) IDs(ctx context.Context) ([]int, error) {
+// IDs executes the query and returns a list of Patient ids.
+func (pq *PatientQuery) IDs(ctx context.Context) ([]int, error) {
 	var ids []int
-	if err := pq.Select(pregnant.FieldID).Scan(ctx, &ids); err != nil {
+	if err := pq.Select(patient.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
 	return ids, nil
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (pq *PregnantQuery) IDsX(ctx context.Context) []int {
+func (pq *PatientQuery) IDsX(ctx context.Context) []int {
 	ids, err := pq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -204,7 +204,7 @@ func (pq *PregnantQuery) IDsX(ctx context.Context) []int {
 }
 
 // Count returns the count of the given query.
-func (pq *PregnantQuery) Count(ctx context.Context) (int, error) {
+func (pq *PatientQuery) Count(ctx context.Context) (int, error) {
 	if err := pq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
@@ -212,7 +212,7 @@ func (pq *PregnantQuery) Count(ctx context.Context) (int, error) {
 }
 
 // CountX is like Count, but panics if an error occurs.
-func (pq *PregnantQuery) CountX(ctx context.Context) int {
+func (pq *PatientQuery) CountX(ctx context.Context) int {
 	count, err := pq.Count(ctx)
 	if err != nil {
 		panic(err)
@@ -221,7 +221,7 @@ func (pq *PregnantQuery) CountX(ctx context.Context) int {
 }
 
 // Exist returns true if the query has elements in the graph.
-func (pq *PregnantQuery) Exist(ctx context.Context) (bool, error) {
+func (pq *PatientQuery) Exist(ctx context.Context) (bool, error) {
 	if err := pq.prepareQuery(ctx); err != nil {
 		return false, err
 	}
@@ -229,7 +229,7 @@ func (pq *PregnantQuery) Exist(ctx context.Context) (bool, error) {
 }
 
 // ExistX is like Exist, but panics if an error occurs.
-func (pq *PregnantQuery) ExistX(ctx context.Context) bool {
+func (pq *PatientQuery) ExistX(ctx context.Context) bool {
 	exist, err := pq.Exist(ctx)
 	if err != nil {
 		panic(err)
@@ -239,14 +239,14 @@ func (pq *PregnantQuery) ExistX(ctx context.Context) bool {
 
 // Clone returns a duplicate of the query builder, including all associated steps. It can be
 // used to prepare common query builders and use them differently after the clone is made.
-func (pq *PregnantQuery) Clone() *PregnantQuery {
-	return &PregnantQuery{
+func (pq *PatientQuery) Clone() *PatientQuery {
+	return &PatientQuery{
 		config:     pq.config,
 		limit:      pq.limit,
 		offset:     pq.offset,
 		order:      append([]OrderFunc{}, pq.order...),
 		unique:     append([]string{}, pq.unique...),
-		predicates: append([]predicate.Pregnant{}, pq.predicates...),
+		predicates: append([]predicate.Patient{}, pq.predicates...),
 		// clone intermediate query.
 		sql:  pq.sql.Clone(),
 		path: pq.path,
@@ -255,7 +255,7 @@ func (pq *PregnantQuery) Clone() *PregnantQuery {
 
 //  WithSETMOM tells the query-builder to eager-loads the nodes that are connected to
 // the "SETMOM" edge. The optional arguments used to configure the query builder of the edge.
-func (pq *PregnantQuery) WithSETMOM(opts ...func(*AntenatalQuery)) *PregnantQuery {
+func (pq *PatientQuery) WithSETMOM(opts ...func(*AntenatalQuery)) *PatientQuery {
 	query := &AntenatalQuery{config: pq.config}
 	for _, opt := range opts {
 		opt(query)
@@ -270,17 +270,17 @@ func (pq *PregnantQuery) WithSETMOM(opts ...func(*AntenatalQuery)) *PregnantQuer
 // Example:
 //
 //	var v []struct {
-//		PREGNANTNAME string `json:"PREGNANT_NAME,omitempty"`
+//		PatientName string `json:"patient_name,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
-//	client.Pregnant.Query().
-//		GroupBy(pregnant.FieldPREGNANTNAME).
+//	client.Patient.Query().
+//		GroupBy(patient.FieldPatientName).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
-func (pq *PregnantQuery) GroupBy(field string, fields ...string) *PregnantGroupBy {
-	group := &PregnantGroupBy{config: pq.config}
+func (pq *PatientQuery) GroupBy(field string, fields ...string) *PatientGroupBy {
+	group := &PatientGroupBy{config: pq.config}
 	group.fields = append([]string{field}, fields...)
 	group.path = func(ctx context.Context) (prev *sql.Selector, err error) {
 		if err := pq.prepareQuery(ctx); err != nil {
@@ -296,15 +296,15 @@ func (pq *PregnantQuery) GroupBy(field string, fields ...string) *PregnantGroupB
 // Example:
 //
 //	var v []struct {
-//		PREGNANTNAME string `json:"PREGNANT_NAME,omitempty"`
+//		PatientName string `json:"patient_name,omitempty"`
 //	}
 //
-//	client.Pregnant.Query().
-//		Select(pregnant.FieldPREGNANTNAME).
+//	client.Patient.Query().
+//		Select(patient.FieldPatientName).
 //		Scan(ctx, &v)
 //
-func (pq *PregnantQuery) Select(field string, fields ...string) *PregnantSelect {
-	selector := &PregnantSelect{config: pq.config}
+func (pq *PatientQuery) Select(field string, fields ...string) *PatientSelect {
+	selector := &PatientSelect{config: pq.config}
 	selector.fields = append([]string{field}, fields...)
 	selector.path = func(ctx context.Context) (prev *sql.Selector, err error) {
 		if err := pq.prepareQuery(ctx); err != nil {
@@ -315,7 +315,7 @@ func (pq *PregnantQuery) Select(field string, fields ...string) *PregnantSelect 
 	return selector
 }
 
-func (pq *PregnantQuery) prepareQuery(ctx context.Context) error {
+func (pq *PatientQuery) prepareQuery(ctx context.Context) error {
 	if pq.path != nil {
 		prev, err := pq.path(ctx)
 		if err != nil {
@@ -326,16 +326,16 @@ func (pq *PregnantQuery) prepareQuery(ctx context.Context) error {
 	return nil
 }
 
-func (pq *PregnantQuery) sqlAll(ctx context.Context) ([]*Pregnant, error) {
+func (pq *PatientQuery) sqlAll(ctx context.Context) ([]*Patient, error) {
 	var (
-		nodes       = []*Pregnant{}
+		nodes       = []*Patient{}
 		_spec       = pq.querySpec()
 		loadedTypes = [1]bool{
 			pq.withSETMOM != nil,
 		}
 	)
 	_spec.ScanValues = func() []interface{} {
-		node := &Pregnant{config: pq.config}
+		node := &Patient{config: pq.config}
 		nodes = append(nodes, node)
 		values := node.scanValues()
 		return values
@@ -357,27 +357,27 @@ func (pq *PregnantQuery) sqlAll(ctx context.Context) ([]*Pregnant, error) {
 
 	if query := pq.withSETMOM; query != nil {
 		fks := make([]driver.Value, 0, len(nodes))
-		nodeids := make(map[int]*Pregnant)
+		nodeids := make(map[int]*Patient)
 		for i := range nodes {
 			fks = append(fks, nodes[i].ID)
 			nodeids[nodes[i].ID] = nodes[i]
 		}
 		query.withFKs = true
 		query.Where(predicate.Antenatal(func(s *sql.Selector) {
-			s.Where(sql.InValues(pregnant.SETMOMColumn, fks...))
+			s.Where(sql.InValues(patient.SETMOMColumn, fks...))
 		}))
 		neighbors, err := query.All(ctx)
 		if err != nil {
 			return nil, err
 		}
 		for _, n := range neighbors {
-			fk := n.pregnant_setmom
+			fk := n.patient_setmom
 			if fk == nil {
-				return nil, fmt.Errorf(`foreign-key "pregnant_setmom" is nil for node %v`, n.ID)
+				return nil, fmt.Errorf(`foreign-key "patient_setmom" is nil for node %v`, n.ID)
 			}
 			node, ok := nodeids[*fk]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "pregnant_setmom" returned %v for node %v`, *fk, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "patient_setmom" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.SETMOM = append(node.Edges.SETMOM, n)
 		}
@@ -386,12 +386,12 @@ func (pq *PregnantQuery) sqlAll(ctx context.Context) ([]*Pregnant, error) {
 	return nodes, nil
 }
 
-func (pq *PregnantQuery) sqlCount(ctx context.Context) (int, error) {
+func (pq *PatientQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := pq.querySpec()
 	return sqlgraph.CountNodes(ctx, pq.driver, _spec)
 }
 
-func (pq *PregnantQuery) sqlExist(ctx context.Context) (bool, error) {
+func (pq *PatientQuery) sqlExist(ctx context.Context) (bool, error) {
 	n, err := pq.sqlCount(ctx)
 	if err != nil {
 		return false, fmt.Errorf("ent: check existence: %v", err)
@@ -399,14 +399,14 @@ func (pq *PregnantQuery) sqlExist(ctx context.Context) (bool, error) {
 	return n > 0, nil
 }
 
-func (pq *PregnantQuery) querySpec() *sqlgraph.QuerySpec {
+func (pq *PatientQuery) querySpec() *sqlgraph.QuerySpec {
 	_spec := &sqlgraph.QuerySpec{
 		Node: &sqlgraph.NodeSpec{
-			Table:   pregnant.Table,
-			Columns: pregnant.Columns,
+			Table:   patient.Table,
+			Columns: patient.Columns,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: pregnant.FieldID,
+				Column: patient.FieldID,
 			},
 		},
 		From:   pq.sql,
@@ -435,13 +435,13 @@ func (pq *PregnantQuery) querySpec() *sqlgraph.QuerySpec {
 	return _spec
 }
 
-func (pq *PregnantQuery) sqlQuery() *sql.Selector {
+func (pq *PatientQuery) sqlQuery() *sql.Selector {
 	builder := sql.Dialect(pq.driver.Dialect())
-	t1 := builder.Table(pregnant.Table)
-	selector := builder.Select(t1.Columns(pregnant.Columns...)...).From(t1)
+	t1 := builder.Table(patient.Table)
+	selector := builder.Select(t1.Columns(patient.Columns...)...).From(t1)
 	if pq.sql != nil {
 		selector = pq.sql
-		selector.Select(selector.Columns(pregnant.Columns...)...)
+		selector.Select(selector.Columns(patient.Columns...)...)
 	}
 	for _, p := range pq.predicates {
 		p(selector)
@@ -460,8 +460,8 @@ func (pq *PregnantQuery) sqlQuery() *sql.Selector {
 	return selector
 }
 
-// PregnantGroupBy is the builder for group-by Pregnant entities.
-type PregnantGroupBy struct {
+// PatientGroupBy is the builder for group-by Patient entities.
+type PatientGroupBy struct {
 	config
 	fields []string
 	fns    []AggregateFunc
@@ -471,13 +471,13 @@ type PregnantGroupBy struct {
 }
 
 // Aggregate adds the given aggregation functions to the group-by query.
-func (pgb *PregnantGroupBy) Aggregate(fns ...AggregateFunc) *PregnantGroupBy {
+func (pgb *PatientGroupBy) Aggregate(fns ...AggregateFunc) *PatientGroupBy {
 	pgb.fns = append(pgb.fns, fns...)
 	return pgb
 }
 
 // Scan applies the group-by query and scan the result into the given value.
-func (pgb *PregnantGroupBy) Scan(ctx context.Context, v interface{}) error {
+func (pgb *PatientGroupBy) Scan(ctx context.Context, v interface{}) error {
 	query, err := pgb.path(ctx)
 	if err != nil {
 		return err
@@ -487,16 +487,16 @@ func (pgb *PregnantGroupBy) Scan(ctx context.Context, v interface{}) error {
 }
 
 // ScanX is like Scan, but panics if an error occurs.
-func (pgb *PregnantGroupBy) ScanX(ctx context.Context, v interface{}) {
+func (pgb *PatientGroupBy) ScanX(ctx context.Context, v interface{}) {
 	if err := pgb.Scan(ctx, v); err != nil {
 		panic(err)
 	}
 }
 
 // Strings returns list of strings from group-by. It is only allowed when querying group-by with one field.
-func (pgb *PregnantGroupBy) Strings(ctx context.Context) ([]string, error) {
+func (pgb *PatientGroupBy) Strings(ctx context.Context) ([]string, error) {
 	if len(pgb.fields) > 1 {
-		return nil, errors.New("ent: PregnantGroupBy.Strings is not achievable when grouping more than 1 field")
+		return nil, errors.New("ent: PatientGroupBy.Strings is not achievable when grouping more than 1 field")
 	}
 	var v []string
 	if err := pgb.Scan(ctx, &v); err != nil {
@@ -506,7 +506,7 @@ func (pgb *PregnantGroupBy) Strings(ctx context.Context) ([]string, error) {
 }
 
 // StringsX is like Strings, but panics if an error occurs.
-func (pgb *PregnantGroupBy) StringsX(ctx context.Context) []string {
+func (pgb *PatientGroupBy) StringsX(ctx context.Context) []string {
 	v, err := pgb.Strings(ctx)
 	if err != nil {
 		panic(err)
@@ -515,7 +515,7 @@ func (pgb *PregnantGroupBy) StringsX(ctx context.Context) []string {
 }
 
 // String returns a single string from group-by. It is only allowed when querying group-by with one field.
-func (pgb *PregnantGroupBy) String(ctx context.Context) (_ string, err error) {
+func (pgb *PatientGroupBy) String(ctx context.Context) (_ string, err error) {
 	var v []string
 	if v, err = pgb.Strings(ctx); err != nil {
 		return
@@ -524,15 +524,15 @@ func (pgb *PregnantGroupBy) String(ctx context.Context) (_ string, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{pregnant.Label}
+		err = &NotFoundError{patient.Label}
 	default:
-		err = fmt.Errorf("ent: PregnantGroupBy.Strings returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: PatientGroupBy.Strings returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // StringX is like String, but panics if an error occurs.
-func (pgb *PregnantGroupBy) StringX(ctx context.Context) string {
+func (pgb *PatientGroupBy) StringX(ctx context.Context) string {
 	v, err := pgb.String(ctx)
 	if err != nil {
 		panic(err)
@@ -541,9 +541,9 @@ func (pgb *PregnantGroupBy) StringX(ctx context.Context) string {
 }
 
 // Ints returns list of ints from group-by. It is only allowed when querying group-by with one field.
-func (pgb *PregnantGroupBy) Ints(ctx context.Context) ([]int, error) {
+func (pgb *PatientGroupBy) Ints(ctx context.Context) ([]int, error) {
 	if len(pgb.fields) > 1 {
-		return nil, errors.New("ent: PregnantGroupBy.Ints is not achievable when grouping more than 1 field")
+		return nil, errors.New("ent: PatientGroupBy.Ints is not achievable when grouping more than 1 field")
 	}
 	var v []int
 	if err := pgb.Scan(ctx, &v); err != nil {
@@ -553,7 +553,7 @@ func (pgb *PregnantGroupBy) Ints(ctx context.Context) ([]int, error) {
 }
 
 // IntsX is like Ints, but panics if an error occurs.
-func (pgb *PregnantGroupBy) IntsX(ctx context.Context) []int {
+func (pgb *PatientGroupBy) IntsX(ctx context.Context) []int {
 	v, err := pgb.Ints(ctx)
 	if err != nil {
 		panic(err)
@@ -562,7 +562,7 @@ func (pgb *PregnantGroupBy) IntsX(ctx context.Context) []int {
 }
 
 // Int returns a single int from group-by. It is only allowed when querying group-by with one field.
-func (pgb *PregnantGroupBy) Int(ctx context.Context) (_ int, err error) {
+func (pgb *PatientGroupBy) Int(ctx context.Context) (_ int, err error) {
 	var v []int
 	if v, err = pgb.Ints(ctx); err != nil {
 		return
@@ -571,15 +571,15 @@ func (pgb *PregnantGroupBy) Int(ctx context.Context) (_ int, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{pregnant.Label}
+		err = &NotFoundError{patient.Label}
 	default:
-		err = fmt.Errorf("ent: PregnantGroupBy.Ints returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: PatientGroupBy.Ints returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // IntX is like Int, but panics if an error occurs.
-func (pgb *PregnantGroupBy) IntX(ctx context.Context) int {
+func (pgb *PatientGroupBy) IntX(ctx context.Context) int {
 	v, err := pgb.Int(ctx)
 	if err != nil {
 		panic(err)
@@ -588,9 +588,9 @@ func (pgb *PregnantGroupBy) IntX(ctx context.Context) int {
 }
 
 // Float64s returns list of float64s from group-by. It is only allowed when querying group-by with one field.
-func (pgb *PregnantGroupBy) Float64s(ctx context.Context) ([]float64, error) {
+func (pgb *PatientGroupBy) Float64s(ctx context.Context) ([]float64, error) {
 	if len(pgb.fields) > 1 {
-		return nil, errors.New("ent: PregnantGroupBy.Float64s is not achievable when grouping more than 1 field")
+		return nil, errors.New("ent: PatientGroupBy.Float64s is not achievable when grouping more than 1 field")
 	}
 	var v []float64
 	if err := pgb.Scan(ctx, &v); err != nil {
@@ -600,7 +600,7 @@ func (pgb *PregnantGroupBy) Float64s(ctx context.Context) ([]float64, error) {
 }
 
 // Float64sX is like Float64s, but panics if an error occurs.
-func (pgb *PregnantGroupBy) Float64sX(ctx context.Context) []float64 {
+func (pgb *PatientGroupBy) Float64sX(ctx context.Context) []float64 {
 	v, err := pgb.Float64s(ctx)
 	if err != nil {
 		panic(err)
@@ -609,7 +609,7 @@ func (pgb *PregnantGroupBy) Float64sX(ctx context.Context) []float64 {
 }
 
 // Float64 returns a single float64 from group-by. It is only allowed when querying group-by with one field.
-func (pgb *PregnantGroupBy) Float64(ctx context.Context) (_ float64, err error) {
+func (pgb *PatientGroupBy) Float64(ctx context.Context) (_ float64, err error) {
 	var v []float64
 	if v, err = pgb.Float64s(ctx); err != nil {
 		return
@@ -618,15 +618,15 @@ func (pgb *PregnantGroupBy) Float64(ctx context.Context) (_ float64, err error) 
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{pregnant.Label}
+		err = &NotFoundError{patient.Label}
 	default:
-		err = fmt.Errorf("ent: PregnantGroupBy.Float64s returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: PatientGroupBy.Float64s returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // Float64X is like Float64, but panics if an error occurs.
-func (pgb *PregnantGroupBy) Float64X(ctx context.Context) float64 {
+func (pgb *PatientGroupBy) Float64X(ctx context.Context) float64 {
 	v, err := pgb.Float64(ctx)
 	if err != nil {
 		panic(err)
@@ -635,9 +635,9 @@ func (pgb *PregnantGroupBy) Float64X(ctx context.Context) float64 {
 }
 
 // Bools returns list of bools from group-by. It is only allowed when querying group-by with one field.
-func (pgb *PregnantGroupBy) Bools(ctx context.Context) ([]bool, error) {
+func (pgb *PatientGroupBy) Bools(ctx context.Context) ([]bool, error) {
 	if len(pgb.fields) > 1 {
-		return nil, errors.New("ent: PregnantGroupBy.Bools is not achievable when grouping more than 1 field")
+		return nil, errors.New("ent: PatientGroupBy.Bools is not achievable when grouping more than 1 field")
 	}
 	var v []bool
 	if err := pgb.Scan(ctx, &v); err != nil {
@@ -647,7 +647,7 @@ func (pgb *PregnantGroupBy) Bools(ctx context.Context) ([]bool, error) {
 }
 
 // BoolsX is like Bools, but panics if an error occurs.
-func (pgb *PregnantGroupBy) BoolsX(ctx context.Context) []bool {
+func (pgb *PatientGroupBy) BoolsX(ctx context.Context) []bool {
 	v, err := pgb.Bools(ctx)
 	if err != nil {
 		panic(err)
@@ -656,7 +656,7 @@ func (pgb *PregnantGroupBy) BoolsX(ctx context.Context) []bool {
 }
 
 // Bool returns a single bool from group-by. It is only allowed when querying group-by with one field.
-func (pgb *PregnantGroupBy) Bool(ctx context.Context) (_ bool, err error) {
+func (pgb *PatientGroupBy) Bool(ctx context.Context) (_ bool, err error) {
 	var v []bool
 	if v, err = pgb.Bools(ctx); err != nil {
 		return
@@ -665,15 +665,15 @@ func (pgb *PregnantGroupBy) Bool(ctx context.Context) (_ bool, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{pregnant.Label}
+		err = &NotFoundError{patient.Label}
 	default:
-		err = fmt.Errorf("ent: PregnantGroupBy.Bools returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: PatientGroupBy.Bools returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // BoolX is like Bool, but panics if an error occurs.
-func (pgb *PregnantGroupBy) BoolX(ctx context.Context) bool {
+func (pgb *PatientGroupBy) BoolX(ctx context.Context) bool {
 	v, err := pgb.Bool(ctx)
 	if err != nil {
 		panic(err)
@@ -681,7 +681,7 @@ func (pgb *PregnantGroupBy) BoolX(ctx context.Context) bool {
 	return v
 }
 
-func (pgb *PregnantGroupBy) sqlScan(ctx context.Context, v interface{}) error {
+func (pgb *PatientGroupBy) sqlScan(ctx context.Context, v interface{}) error {
 	rows := &sql.Rows{}
 	query, args := pgb.sqlQuery().Query()
 	if err := pgb.driver.Query(ctx, query, args, rows); err != nil {
@@ -691,7 +691,7 @@ func (pgb *PregnantGroupBy) sqlScan(ctx context.Context, v interface{}) error {
 	return sql.ScanSlice(rows, v)
 }
 
-func (pgb *PregnantGroupBy) sqlQuery() *sql.Selector {
+func (pgb *PatientGroupBy) sqlQuery() *sql.Selector {
 	selector := pgb.sql
 	columns := make([]string, 0, len(pgb.fields)+len(pgb.fns))
 	columns = append(columns, pgb.fields...)
@@ -701,8 +701,8 @@ func (pgb *PregnantGroupBy) sqlQuery() *sql.Selector {
 	return selector.Select(columns...).GroupBy(pgb.fields...)
 }
 
-// PregnantSelect is the builder for select fields of Pregnant entities.
-type PregnantSelect struct {
+// PatientSelect is the builder for select fields of Patient entities.
+type PatientSelect struct {
 	config
 	fields []string
 	// intermediate query (i.e. traversal path).
@@ -711,7 +711,7 @@ type PregnantSelect struct {
 }
 
 // Scan applies the selector query and scan the result into the given value.
-func (ps *PregnantSelect) Scan(ctx context.Context, v interface{}) error {
+func (ps *PatientSelect) Scan(ctx context.Context, v interface{}) error {
 	query, err := ps.path(ctx)
 	if err != nil {
 		return err
@@ -721,16 +721,16 @@ func (ps *PregnantSelect) Scan(ctx context.Context, v interface{}) error {
 }
 
 // ScanX is like Scan, but panics if an error occurs.
-func (ps *PregnantSelect) ScanX(ctx context.Context, v interface{}) {
+func (ps *PatientSelect) ScanX(ctx context.Context, v interface{}) {
 	if err := ps.Scan(ctx, v); err != nil {
 		panic(err)
 	}
 }
 
 // Strings returns list of strings from selector. It is only allowed when selecting one field.
-func (ps *PregnantSelect) Strings(ctx context.Context) ([]string, error) {
+func (ps *PatientSelect) Strings(ctx context.Context) ([]string, error) {
 	if len(ps.fields) > 1 {
-		return nil, errors.New("ent: PregnantSelect.Strings is not achievable when selecting more than 1 field")
+		return nil, errors.New("ent: PatientSelect.Strings is not achievable when selecting more than 1 field")
 	}
 	var v []string
 	if err := ps.Scan(ctx, &v); err != nil {
@@ -740,7 +740,7 @@ func (ps *PregnantSelect) Strings(ctx context.Context) ([]string, error) {
 }
 
 // StringsX is like Strings, but panics if an error occurs.
-func (ps *PregnantSelect) StringsX(ctx context.Context) []string {
+func (ps *PatientSelect) StringsX(ctx context.Context) []string {
 	v, err := ps.Strings(ctx)
 	if err != nil {
 		panic(err)
@@ -749,7 +749,7 @@ func (ps *PregnantSelect) StringsX(ctx context.Context) []string {
 }
 
 // String returns a single string from selector. It is only allowed when selecting one field.
-func (ps *PregnantSelect) String(ctx context.Context) (_ string, err error) {
+func (ps *PatientSelect) String(ctx context.Context) (_ string, err error) {
 	var v []string
 	if v, err = ps.Strings(ctx); err != nil {
 		return
@@ -758,15 +758,15 @@ func (ps *PregnantSelect) String(ctx context.Context) (_ string, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{pregnant.Label}
+		err = &NotFoundError{patient.Label}
 	default:
-		err = fmt.Errorf("ent: PregnantSelect.Strings returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: PatientSelect.Strings returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // StringX is like String, but panics if an error occurs.
-func (ps *PregnantSelect) StringX(ctx context.Context) string {
+func (ps *PatientSelect) StringX(ctx context.Context) string {
 	v, err := ps.String(ctx)
 	if err != nil {
 		panic(err)
@@ -775,9 +775,9 @@ func (ps *PregnantSelect) StringX(ctx context.Context) string {
 }
 
 // Ints returns list of ints from selector. It is only allowed when selecting one field.
-func (ps *PregnantSelect) Ints(ctx context.Context) ([]int, error) {
+func (ps *PatientSelect) Ints(ctx context.Context) ([]int, error) {
 	if len(ps.fields) > 1 {
-		return nil, errors.New("ent: PregnantSelect.Ints is not achievable when selecting more than 1 field")
+		return nil, errors.New("ent: PatientSelect.Ints is not achievable when selecting more than 1 field")
 	}
 	var v []int
 	if err := ps.Scan(ctx, &v); err != nil {
@@ -787,7 +787,7 @@ func (ps *PregnantSelect) Ints(ctx context.Context) ([]int, error) {
 }
 
 // IntsX is like Ints, but panics if an error occurs.
-func (ps *PregnantSelect) IntsX(ctx context.Context) []int {
+func (ps *PatientSelect) IntsX(ctx context.Context) []int {
 	v, err := ps.Ints(ctx)
 	if err != nil {
 		panic(err)
@@ -796,7 +796,7 @@ func (ps *PregnantSelect) IntsX(ctx context.Context) []int {
 }
 
 // Int returns a single int from selector. It is only allowed when selecting one field.
-func (ps *PregnantSelect) Int(ctx context.Context) (_ int, err error) {
+func (ps *PatientSelect) Int(ctx context.Context) (_ int, err error) {
 	var v []int
 	if v, err = ps.Ints(ctx); err != nil {
 		return
@@ -805,15 +805,15 @@ func (ps *PregnantSelect) Int(ctx context.Context) (_ int, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{pregnant.Label}
+		err = &NotFoundError{patient.Label}
 	default:
-		err = fmt.Errorf("ent: PregnantSelect.Ints returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: PatientSelect.Ints returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // IntX is like Int, but panics if an error occurs.
-func (ps *PregnantSelect) IntX(ctx context.Context) int {
+func (ps *PatientSelect) IntX(ctx context.Context) int {
 	v, err := ps.Int(ctx)
 	if err != nil {
 		panic(err)
@@ -822,9 +822,9 @@ func (ps *PregnantSelect) IntX(ctx context.Context) int {
 }
 
 // Float64s returns list of float64s from selector. It is only allowed when selecting one field.
-func (ps *PregnantSelect) Float64s(ctx context.Context) ([]float64, error) {
+func (ps *PatientSelect) Float64s(ctx context.Context) ([]float64, error) {
 	if len(ps.fields) > 1 {
-		return nil, errors.New("ent: PregnantSelect.Float64s is not achievable when selecting more than 1 field")
+		return nil, errors.New("ent: PatientSelect.Float64s is not achievable when selecting more than 1 field")
 	}
 	var v []float64
 	if err := ps.Scan(ctx, &v); err != nil {
@@ -834,7 +834,7 @@ func (ps *PregnantSelect) Float64s(ctx context.Context) ([]float64, error) {
 }
 
 // Float64sX is like Float64s, but panics if an error occurs.
-func (ps *PregnantSelect) Float64sX(ctx context.Context) []float64 {
+func (ps *PatientSelect) Float64sX(ctx context.Context) []float64 {
 	v, err := ps.Float64s(ctx)
 	if err != nil {
 		panic(err)
@@ -843,7 +843,7 @@ func (ps *PregnantSelect) Float64sX(ctx context.Context) []float64 {
 }
 
 // Float64 returns a single float64 from selector. It is only allowed when selecting one field.
-func (ps *PregnantSelect) Float64(ctx context.Context) (_ float64, err error) {
+func (ps *PatientSelect) Float64(ctx context.Context) (_ float64, err error) {
 	var v []float64
 	if v, err = ps.Float64s(ctx); err != nil {
 		return
@@ -852,15 +852,15 @@ func (ps *PregnantSelect) Float64(ctx context.Context) (_ float64, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{pregnant.Label}
+		err = &NotFoundError{patient.Label}
 	default:
-		err = fmt.Errorf("ent: PregnantSelect.Float64s returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: PatientSelect.Float64s returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // Float64X is like Float64, but panics if an error occurs.
-func (ps *PregnantSelect) Float64X(ctx context.Context) float64 {
+func (ps *PatientSelect) Float64X(ctx context.Context) float64 {
 	v, err := ps.Float64(ctx)
 	if err != nil {
 		panic(err)
@@ -869,9 +869,9 @@ func (ps *PregnantSelect) Float64X(ctx context.Context) float64 {
 }
 
 // Bools returns list of bools from selector. It is only allowed when selecting one field.
-func (ps *PregnantSelect) Bools(ctx context.Context) ([]bool, error) {
+func (ps *PatientSelect) Bools(ctx context.Context) ([]bool, error) {
 	if len(ps.fields) > 1 {
-		return nil, errors.New("ent: PregnantSelect.Bools is not achievable when selecting more than 1 field")
+		return nil, errors.New("ent: PatientSelect.Bools is not achievable when selecting more than 1 field")
 	}
 	var v []bool
 	if err := ps.Scan(ctx, &v); err != nil {
@@ -881,7 +881,7 @@ func (ps *PregnantSelect) Bools(ctx context.Context) ([]bool, error) {
 }
 
 // BoolsX is like Bools, but panics if an error occurs.
-func (ps *PregnantSelect) BoolsX(ctx context.Context) []bool {
+func (ps *PatientSelect) BoolsX(ctx context.Context) []bool {
 	v, err := ps.Bools(ctx)
 	if err != nil {
 		panic(err)
@@ -890,7 +890,7 @@ func (ps *PregnantSelect) BoolsX(ctx context.Context) []bool {
 }
 
 // Bool returns a single bool from selector. It is only allowed when selecting one field.
-func (ps *PregnantSelect) Bool(ctx context.Context) (_ bool, err error) {
+func (ps *PatientSelect) Bool(ctx context.Context) (_ bool, err error) {
 	var v []bool
 	if v, err = ps.Bools(ctx); err != nil {
 		return
@@ -899,15 +899,15 @@ func (ps *PregnantSelect) Bool(ctx context.Context) (_ bool, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{pregnant.Label}
+		err = &NotFoundError{patient.Label}
 	default:
-		err = fmt.Errorf("ent: PregnantSelect.Bools returned %d results when one was expected", len(v))
+		err = fmt.Errorf("ent: PatientSelect.Bools returned %d results when one was expected", len(v))
 	}
 	return
 }
 
 // BoolX is like Bool, but panics if an error occurs.
-func (ps *PregnantSelect) BoolX(ctx context.Context) bool {
+func (ps *PatientSelect) BoolX(ctx context.Context) bool {
 	v, err := ps.Bool(ctx)
 	if err != nil {
 		panic(err)
@@ -915,7 +915,7 @@ func (ps *PregnantSelect) BoolX(ctx context.Context) bool {
 	return v
 }
 
-func (ps *PregnantSelect) sqlScan(ctx context.Context, v interface{}) error {
+func (ps *PatientSelect) sqlScan(ctx context.Context, v interface{}) error {
 	rows := &sql.Rows{}
 	query, args := ps.sqlQuery().Query()
 	if err := ps.driver.Query(ctx, query, args, rows); err != nil {
@@ -925,7 +925,7 @@ func (ps *PregnantSelect) sqlScan(ctx context.Context, v interface{}) error {
 	return sql.ScanSlice(rows, v)
 }
 
-func (ps *PregnantSelect) sqlQuery() sql.Querier {
+func (ps *PatientSelect) sqlQuery() sql.Querier {
 	selector := ps.sql
 	selector.Select(selector.Columns(ps.fields...)...)
 	return selector

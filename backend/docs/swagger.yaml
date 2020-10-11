@@ -18,7 +18,7 @@ definitions:
   ent.AntenatalEdges:
     properties:
       getmom:
-        $ref: '#/definitions/ent.Pregnant'
+        $ref: '#/definitions/ent.Patient'
         description: GETMOM holds the value of the GETMOM edge.
         type: object
       getstatus:
@@ -53,25 +53,25 @@ definitions:
           $ref: '#/definitions/ent.Antenatal'
         type: array
     type: object
-  ent.Pregnant:
+  ent.Patient:
     properties:
-      PREGNANT_AGE:
-        description: PREGNANTAGE holds the value of the "PREGNANT_AGE" field.
-        type: integer
-      PREGNANT_NAME:
-        description: PREGNANTNAME holds the value of the "PREGNANT_NAME" field.
-        type: string
       edges:
-        $ref: '#/definitions/ent.PregnantEdges'
+        $ref: '#/definitions/ent.PatientEdges'
         description: |-
           Edges holds the relations/edges for other nodes in the graph.
-          The values are being populated by the PregnantQuery when eager-loading is set.
+          The values are being populated by the PatientQuery when eager-loading is set.
         type: object
       id:
         description: ID of the ent.
         type: integer
+      patient_age:
+        description: PatientAge holds the value of the "patient_age" field.
+        type: integer
+      patient_name:
+        description: PatientName holds the value of the "patient_name" field.
+        type: string
     type: object
-  ent.PregnantEdges:
+  ent.PatientEdges:
     properties:
       setmom:
         description: SETMOM holds the value of the SETMOM edge.
@@ -424,10 +424,10 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Update a babystatus entity by ID
-  /pregnants:
+  /patients:
     get:
-      description: list pregnant entities
-      operationId: list-pregnant
+      description: list patient entities
+      operationId: list-patient
       parameters:
       - description: Limit
         in: query
@@ -444,7 +444,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/ent.Pregnant'
+              $ref: '#/definitions/ent.Patient'
             type: array
         "400":
           description: Bad Request
@@ -454,26 +454,26 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: List pregnant entities
+      summary: List patient entities
     post:
       consumes:
       - application/json
-      description: Create pregnant
-      operationId: create-pregnant
+      description: Create patient
+      operationId: create-patient
       parameters:
-      - description: Pregnant entity
+      - description: Patient entity
         in: body
-        name: pregnant
+        name: patient
         required: true
         schema:
-          $ref: '#/definitions/ent.Pregnant'
+          $ref: '#/definitions/ent.Patient'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/ent.Pregnant'
+            $ref: '#/definitions/ent.Patient'
         "400":
           description: Bad Request
           schema:
@@ -482,13 +482,13 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Create pregnant
-  /pregnants/{id}:
+      summary: Create patient
+  /patients/{id}:
     delete:
-      description: get pregnant by ID
-      operationId: delete-pregnant
+      description: get patient by ID
+      operationId: delete-patient
       parameters:
-      - description: Pregnant ID
+      - description: Patient ID
         in: path
         name: id
         required: true
@@ -512,12 +512,12 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Delete a pregnant entity by ID
+      summary: Delete a patient entity by ID
     get:
-      description: get pregnant by ID
-      operationId: get-pregnant
+      description: get patient by ID
+      operationId: get-patient
       parameters:
-      - description: Pregnant ID
+      - description: Patient ID
         in: path
         name: id
         required: true
@@ -528,7 +528,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/ent.Pregnant'
+            $ref: '#/definitions/ent.Patient'
         "400":
           description: Bad Request
           schema:
@@ -541,31 +541,31 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Get a pregnant entity by ID
+      summary: Get a patient entity by ID
     put:
       consumes:
       - application/json
-      description: update pregnant by ID
-      operationId: update-pregnant
+      description: update patient by ID
+      operationId: update-patient
       parameters:
-      - description: Pregnant ID
+      - description: Patient ID
         in: path
         name: id
         required: true
         type: integer
-      - description: Pregnant entity
+      - description: Patient entity
         in: body
-        name: pregnant
+        name: patient
         required: true
         schema:
-          $ref: '#/definitions/ent.Pregnant'
+          $ref: '#/definitions/ent.Patient'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/ent.Pregnant'
+            $ref: '#/definitions/ent.Patient'
         "400":
           description: Bad Request
           schema:
@@ -574,7 +574,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Update a pregnant entity by ID
+      summary: Update a patient entity by ID
   /users:
     get:
       description: list user entities

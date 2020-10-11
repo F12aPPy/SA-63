@@ -258,28 +258,28 @@ func (f BabystatusMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Muta
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.BabystatusMutation", m)
 }
 
-// The PregnantQueryRuleFunc type is an adapter to allow the use of ordinary
+// The PatientQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
-type PregnantQueryRuleFunc func(context.Context, *ent.PregnantQuery) error
+type PatientQueryRuleFunc func(context.Context, *ent.PatientQuery) error
 
 // EvalQuery return f(ctx, q).
-func (f PregnantQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.PregnantQuery); ok {
+func (f PatientQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.PatientQuery); ok {
 		return f(ctx, q)
 	}
-	return Denyf("ent/privacy: unexpected query type %T, expect *ent.PregnantQuery", q)
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.PatientQuery", q)
 }
 
-// The PregnantMutationRuleFunc type is an adapter to allow the use of ordinary
+// The PatientMutationRuleFunc type is an adapter to allow the use of ordinary
 // functions as a mutation rule.
-type PregnantMutationRuleFunc func(context.Context, *ent.PregnantMutation) error
+type PatientMutationRuleFunc func(context.Context, *ent.PatientMutation) error
 
 // EvalMutation calls f(ctx, m).
-func (f PregnantMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
-	if m, ok := m.(*ent.PregnantMutation); ok {
+func (f PatientMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.PatientMutation); ok {
 		return f(ctx, m)
 	}
-	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.PregnantMutation", m)
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.PatientMutation", m)
 }
 
 // The UserQueryRuleFunc type is an adapter to allow the use of ordinary

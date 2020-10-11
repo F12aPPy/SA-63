@@ -25,11 +25,11 @@ const (
 	Table = "antenatals"
 	// GETMOMTable is the table the holds the GETMOM relation/edge.
 	GETMOMTable = "antenatals"
-	// GETMOMInverseTable is the table name for the Pregnant entity.
-	// It exists in this package in order to avoid circular dependency with the "pregnant" package.
-	GETMOMInverseTable = "pregnants"
+	// GETMOMInverseTable is the table name for the Patient entity.
+	// It exists in this package in order to avoid circular dependency with the "patient" package.
+	GETMOMInverseTable = "patients"
 	// GETMOMColumn is the table column denoting the GETMOM relation/edge.
-	GETMOMColumn = "pregnant_setmom"
+	GETMOMColumn = "patient_setmom"
 	// TAKECARETable is the table the holds the TAKECARE relation/edge.
 	TAKECARETable = "antenatals"
 	// TAKECAREInverseTable is the table name for the User entity.
@@ -55,7 +55,7 @@ var Columns = []string{
 // ForeignKeys holds the SQL foreign-keys that are owned by the Antenatal type.
 var ForeignKeys = []string{
 	"babystatus_setstatus",
-	"pregnant_setmom",
+	"patient_setmom",
 	"user_care",
 }
 

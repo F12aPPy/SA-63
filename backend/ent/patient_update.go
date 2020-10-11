@@ -7,54 +7,54 @@ import (
 	"fmt"
 
 	"github.com/F12aPPy/app/ent/antenatal"
+	"github.com/F12aPPy/app/ent/patient"
 	"github.com/F12aPPy/app/ent/predicate"
-	"github.com/F12aPPy/app/ent/pregnant"
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 )
 
-// PregnantUpdate is the builder for updating Pregnant entities.
-type PregnantUpdate struct {
+// PatientUpdate is the builder for updating Patient entities.
+type PatientUpdate struct {
 	config
 	hooks      []Hook
-	mutation   *PregnantMutation
-	predicates []predicate.Pregnant
+	mutation   *PatientMutation
+	predicates []predicate.Patient
 }
 
 // Where adds a new predicate for the builder.
-func (pu *PregnantUpdate) Where(ps ...predicate.Pregnant) *PregnantUpdate {
+func (pu *PatientUpdate) Where(ps ...predicate.Patient) *PatientUpdate {
 	pu.predicates = append(pu.predicates, ps...)
 	return pu
 }
 
-// SetPREGNANTNAME sets the PREGNANT_NAME field.
-func (pu *PregnantUpdate) SetPREGNANTNAME(s string) *PregnantUpdate {
-	pu.mutation.SetPREGNANTNAME(s)
+// SetPatientName sets the patient_name field.
+func (pu *PatientUpdate) SetPatientName(s string) *PatientUpdate {
+	pu.mutation.SetPatientName(s)
 	return pu
 }
 
-// SetPREGNANTAGE sets the PREGNANT_AGE field.
-func (pu *PregnantUpdate) SetPREGNANTAGE(i int) *PregnantUpdate {
-	pu.mutation.ResetPREGNANTAGE()
-	pu.mutation.SetPREGNANTAGE(i)
+// SetPatientAge sets the patient_age field.
+func (pu *PatientUpdate) SetPatientAge(i int) *PatientUpdate {
+	pu.mutation.ResetPatientAge()
+	pu.mutation.SetPatientAge(i)
 	return pu
 }
 
-// AddPREGNANTAGE adds i to PREGNANT_AGE.
-func (pu *PregnantUpdate) AddPREGNANTAGE(i int) *PregnantUpdate {
-	pu.mutation.AddPREGNANTAGE(i)
+// AddPatientAge adds i to patient_age.
+func (pu *PatientUpdate) AddPatientAge(i int) *PatientUpdate {
+	pu.mutation.AddPatientAge(i)
 	return pu
 }
 
 // AddSETMOMIDs adds the SETMOM edge to Antenatal by ids.
-func (pu *PregnantUpdate) AddSETMOMIDs(ids ...int) *PregnantUpdate {
+func (pu *PatientUpdate) AddSETMOMIDs(ids ...int) *PatientUpdate {
 	pu.mutation.AddSETMOMIDs(ids...)
 	return pu
 }
 
 // AddSETMOM adds the SETMOM edges to Antenatal.
-func (pu *PregnantUpdate) AddSETMOM(a ...*Antenatal) *PregnantUpdate {
+func (pu *PatientUpdate) AddSETMOM(a ...*Antenatal) *PatientUpdate {
 	ids := make([]int, len(a))
 	for i := range a {
 		ids[i] = a[i].ID
@@ -62,19 +62,19 @@ func (pu *PregnantUpdate) AddSETMOM(a ...*Antenatal) *PregnantUpdate {
 	return pu.AddSETMOMIDs(ids...)
 }
 
-// Mutation returns the PregnantMutation object of the builder.
-func (pu *PregnantUpdate) Mutation() *PregnantMutation {
+// Mutation returns the PatientMutation object of the builder.
+func (pu *PatientUpdate) Mutation() *PatientMutation {
 	return pu.mutation
 }
 
 // RemoveSETMOMIDs removes the SETMOM edge to Antenatal by ids.
-func (pu *PregnantUpdate) RemoveSETMOMIDs(ids ...int) *PregnantUpdate {
+func (pu *PatientUpdate) RemoveSETMOMIDs(ids ...int) *PatientUpdate {
 	pu.mutation.RemoveSETMOMIDs(ids...)
 	return pu
 }
 
 // RemoveSETMOM removes SETMOM edges to Antenatal.
-func (pu *PregnantUpdate) RemoveSETMOM(a ...*Antenatal) *PregnantUpdate {
+func (pu *PatientUpdate) RemoveSETMOM(a ...*Antenatal) *PatientUpdate {
 	ids := make([]int, len(a))
 	for i := range a {
 		ids[i] = a[i].ID
@@ -83,15 +83,15 @@ func (pu *PregnantUpdate) RemoveSETMOM(a ...*Antenatal) *PregnantUpdate {
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
-func (pu *PregnantUpdate) Save(ctx context.Context) (int, error) {
-	if v, ok := pu.mutation.PREGNANTNAME(); ok {
-		if err := pregnant.PREGNANTNAMEValidator(v); err != nil {
-			return 0, &ValidationError{Name: "PREGNANT_NAME", err: fmt.Errorf("ent: validator failed for field \"PREGNANT_NAME\": %w", err)}
+func (pu *PatientUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := pu.mutation.PatientName(); ok {
+		if err := patient.PatientNameValidator(v); err != nil {
+			return 0, &ValidationError{Name: "patient_name", err: fmt.Errorf("ent: validator failed for field \"patient_name\": %w", err)}
 		}
 	}
-	if v, ok := pu.mutation.PREGNANTAGE(); ok {
-		if err := pregnant.PREGNANTAGEValidator(v); err != nil {
-			return 0, &ValidationError{Name: "PREGNANT_AGE", err: fmt.Errorf("ent: validator failed for field \"PREGNANT_AGE\": %w", err)}
+	if v, ok := pu.mutation.PatientAge(); ok {
+		if err := patient.PatientAgeValidator(v); err != nil {
+			return 0, &ValidationError{Name: "patient_age", err: fmt.Errorf("ent: validator failed for field \"patient_age\": %w", err)}
 		}
 	}
 
@@ -103,7 +103,7 @@ func (pu *PregnantUpdate) Save(ctx context.Context) (int, error) {
 		affected, err = pu.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*PregnantMutation)
+			mutation, ok := m.(*PatientMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
@@ -123,7 +123,7 @@ func (pu *PregnantUpdate) Save(ctx context.Context) (int, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (pu *PregnantUpdate) SaveX(ctx context.Context) int {
+func (pu *PatientUpdate) SaveX(ctx context.Context) int {
 	affected, err := pu.Save(ctx)
 	if err != nil {
 		panic(err)
@@ -132,26 +132,26 @@ func (pu *PregnantUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (pu *PregnantUpdate) Exec(ctx context.Context) error {
+func (pu *PatientUpdate) Exec(ctx context.Context) error {
 	_, err := pu.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (pu *PregnantUpdate) ExecX(ctx context.Context) {
+func (pu *PatientUpdate) ExecX(ctx context.Context) {
 	if err := pu.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
-func (pu *PregnantUpdate) sqlSave(ctx context.Context) (n int, err error) {
+func (pu *PatientUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
-			Table:   pregnant.Table,
-			Columns: pregnant.Columns,
+			Table:   patient.Table,
+			Columns: patient.Columns,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: pregnant.FieldID,
+				Column: patient.FieldID,
 			},
 		},
 	}
@@ -162,33 +162,33 @@ func (pu *PregnantUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := pu.mutation.PREGNANTNAME(); ok {
+	if value, ok := pu.mutation.PatientName(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: pregnant.FieldPREGNANTNAME,
+			Column: patient.FieldPatientName,
 		})
 	}
-	if value, ok := pu.mutation.PREGNANTAGE(); ok {
+	if value, ok := pu.mutation.PatientAge(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: pregnant.FieldPREGNANTAGE,
+			Column: patient.FieldPatientAge,
 		})
 	}
-	if value, ok := pu.mutation.AddedPREGNANTAGE(); ok {
+	if value, ok := pu.mutation.AddedPatientAge(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: pregnant.FieldPREGNANTAGE,
+			Column: patient.FieldPatientAge,
 		})
 	}
 	if nodes := pu.mutation.RemovedSETMOMIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   pregnant.SETMOMTable,
-			Columns: []string{pregnant.SETMOMColumn},
+			Table:   patient.SETMOMTable,
+			Columns: []string{patient.SETMOMColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -206,8 +206,8 @@ func (pu *PregnantUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   pregnant.SETMOMTable,
-			Columns: []string{pregnant.SETMOMColumn},
+			Table:   patient.SETMOMTable,
+			Columns: []string{patient.SETMOMColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -223,7 +223,7 @@ func (pu *PregnantUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, pu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
-			err = &NotFoundError{pregnant.Label}
+			err = &NotFoundError{patient.Label}
 		} else if cerr, ok := isSQLConstraintError(err); ok {
 			err = cerr
 		}
@@ -232,40 +232,40 @@ func (pu *PregnantUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	return n, nil
 }
 
-// PregnantUpdateOne is the builder for updating a single Pregnant entity.
-type PregnantUpdateOne struct {
+// PatientUpdateOne is the builder for updating a single Patient entity.
+type PatientUpdateOne struct {
 	config
 	hooks    []Hook
-	mutation *PregnantMutation
+	mutation *PatientMutation
 }
 
-// SetPREGNANTNAME sets the PREGNANT_NAME field.
-func (puo *PregnantUpdateOne) SetPREGNANTNAME(s string) *PregnantUpdateOne {
-	puo.mutation.SetPREGNANTNAME(s)
+// SetPatientName sets the patient_name field.
+func (puo *PatientUpdateOne) SetPatientName(s string) *PatientUpdateOne {
+	puo.mutation.SetPatientName(s)
 	return puo
 }
 
-// SetPREGNANTAGE sets the PREGNANT_AGE field.
-func (puo *PregnantUpdateOne) SetPREGNANTAGE(i int) *PregnantUpdateOne {
-	puo.mutation.ResetPREGNANTAGE()
-	puo.mutation.SetPREGNANTAGE(i)
+// SetPatientAge sets the patient_age field.
+func (puo *PatientUpdateOne) SetPatientAge(i int) *PatientUpdateOne {
+	puo.mutation.ResetPatientAge()
+	puo.mutation.SetPatientAge(i)
 	return puo
 }
 
-// AddPREGNANTAGE adds i to PREGNANT_AGE.
-func (puo *PregnantUpdateOne) AddPREGNANTAGE(i int) *PregnantUpdateOne {
-	puo.mutation.AddPREGNANTAGE(i)
+// AddPatientAge adds i to patient_age.
+func (puo *PatientUpdateOne) AddPatientAge(i int) *PatientUpdateOne {
+	puo.mutation.AddPatientAge(i)
 	return puo
 }
 
 // AddSETMOMIDs adds the SETMOM edge to Antenatal by ids.
-func (puo *PregnantUpdateOne) AddSETMOMIDs(ids ...int) *PregnantUpdateOne {
+func (puo *PatientUpdateOne) AddSETMOMIDs(ids ...int) *PatientUpdateOne {
 	puo.mutation.AddSETMOMIDs(ids...)
 	return puo
 }
 
 // AddSETMOM adds the SETMOM edges to Antenatal.
-func (puo *PregnantUpdateOne) AddSETMOM(a ...*Antenatal) *PregnantUpdateOne {
+func (puo *PatientUpdateOne) AddSETMOM(a ...*Antenatal) *PatientUpdateOne {
 	ids := make([]int, len(a))
 	for i := range a {
 		ids[i] = a[i].ID
@@ -273,19 +273,19 @@ func (puo *PregnantUpdateOne) AddSETMOM(a ...*Antenatal) *PregnantUpdateOne {
 	return puo.AddSETMOMIDs(ids...)
 }
 
-// Mutation returns the PregnantMutation object of the builder.
-func (puo *PregnantUpdateOne) Mutation() *PregnantMutation {
+// Mutation returns the PatientMutation object of the builder.
+func (puo *PatientUpdateOne) Mutation() *PatientMutation {
 	return puo.mutation
 }
 
 // RemoveSETMOMIDs removes the SETMOM edge to Antenatal by ids.
-func (puo *PregnantUpdateOne) RemoveSETMOMIDs(ids ...int) *PregnantUpdateOne {
+func (puo *PatientUpdateOne) RemoveSETMOMIDs(ids ...int) *PatientUpdateOne {
 	puo.mutation.RemoveSETMOMIDs(ids...)
 	return puo
 }
 
 // RemoveSETMOM removes SETMOM edges to Antenatal.
-func (puo *PregnantUpdateOne) RemoveSETMOM(a ...*Antenatal) *PregnantUpdateOne {
+func (puo *PatientUpdateOne) RemoveSETMOM(a ...*Antenatal) *PatientUpdateOne {
 	ids := make([]int, len(a))
 	for i := range a {
 		ids[i] = a[i].ID
@@ -294,27 +294,27 @@ func (puo *PregnantUpdateOne) RemoveSETMOM(a ...*Antenatal) *PregnantUpdateOne {
 }
 
 // Save executes the query and returns the updated entity.
-func (puo *PregnantUpdateOne) Save(ctx context.Context) (*Pregnant, error) {
-	if v, ok := puo.mutation.PREGNANTNAME(); ok {
-		if err := pregnant.PREGNANTNAMEValidator(v); err != nil {
-			return nil, &ValidationError{Name: "PREGNANT_NAME", err: fmt.Errorf("ent: validator failed for field \"PREGNANT_NAME\": %w", err)}
+func (puo *PatientUpdateOne) Save(ctx context.Context) (*Patient, error) {
+	if v, ok := puo.mutation.PatientName(); ok {
+		if err := patient.PatientNameValidator(v); err != nil {
+			return nil, &ValidationError{Name: "patient_name", err: fmt.Errorf("ent: validator failed for field \"patient_name\": %w", err)}
 		}
 	}
-	if v, ok := puo.mutation.PREGNANTAGE(); ok {
-		if err := pregnant.PREGNANTAGEValidator(v); err != nil {
-			return nil, &ValidationError{Name: "PREGNANT_AGE", err: fmt.Errorf("ent: validator failed for field \"PREGNANT_AGE\": %w", err)}
+	if v, ok := puo.mutation.PatientAge(); ok {
+		if err := patient.PatientAgeValidator(v); err != nil {
+			return nil, &ValidationError{Name: "patient_age", err: fmt.Errorf("ent: validator failed for field \"patient_age\": %w", err)}
 		}
 	}
 
 	var (
 		err  error
-		node *Pregnant
+		node *Patient
 	)
 	if len(puo.hooks) == 0 {
 		node, err = puo.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*PregnantMutation)
+			mutation, ok := m.(*PatientMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
@@ -334,70 +334,70 @@ func (puo *PregnantUpdateOne) Save(ctx context.Context) (*Pregnant, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (puo *PregnantUpdateOne) SaveX(ctx context.Context) *Pregnant {
-	pr, err := puo.Save(ctx)
+func (puo *PatientUpdateOne) SaveX(ctx context.Context) *Patient {
+	pa, err := puo.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
-	return pr
+	return pa
 }
 
 // Exec executes the query on the entity.
-func (puo *PregnantUpdateOne) Exec(ctx context.Context) error {
+func (puo *PatientUpdateOne) Exec(ctx context.Context) error {
 	_, err := puo.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (puo *PregnantUpdateOne) ExecX(ctx context.Context) {
+func (puo *PatientUpdateOne) ExecX(ctx context.Context) {
 	if err := puo.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
-func (puo *PregnantUpdateOne) sqlSave(ctx context.Context) (pr *Pregnant, err error) {
+func (puo *PatientUpdateOne) sqlSave(ctx context.Context) (pa *Patient, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
-			Table:   pregnant.Table,
-			Columns: pregnant.Columns,
+			Table:   patient.Table,
+			Columns: patient.Columns,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: pregnant.FieldID,
+				Column: patient.FieldID,
 			},
 		},
 	}
 	id, ok := puo.mutation.ID()
 	if !ok {
-		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Pregnant.ID for update")}
+		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Patient.ID for update")}
 	}
 	_spec.Node.ID.Value = id
-	if value, ok := puo.mutation.PREGNANTNAME(); ok {
+	if value, ok := puo.mutation.PatientName(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: pregnant.FieldPREGNANTNAME,
+			Column: patient.FieldPatientName,
 		})
 	}
-	if value, ok := puo.mutation.PREGNANTAGE(); ok {
+	if value, ok := puo.mutation.PatientAge(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: pregnant.FieldPREGNANTAGE,
+			Column: patient.FieldPatientAge,
 		})
 	}
-	if value, ok := puo.mutation.AddedPREGNANTAGE(); ok {
+	if value, ok := puo.mutation.AddedPatientAge(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: pregnant.FieldPREGNANTAGE,
+			Column: patient.FieldPatientAge,
 		})
 	}
 	if nodes := puo.mutation.RemovedSETMOMIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   pregnant.SETMOMTable,
-			Columns: []string{pregnant.SETMOMColumn},
+			Table:   patient.SETMOMTable,
+			Columns: []string{patient.SETMOMColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -415,8 +415,8 @@ func (puo *PregnantUpdateOne) sqlSave(ctx context.Context) (pr *Pregnant, err er
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   pregnant.SETMOMTable,
-			Columns: []string{pregnant.SETMOMColumn},
+			Table:   patient.SETMOMTable,
+			Columns: []string{patient.SETMOMColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -430,16 +430,16 @@ func (puo *PregnantUpdateOne) sqlSave(ctx context.Context) (pr *Pregnant, err er
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	pr = &Pregnant{config: puo.config}
-	_spec.Assign = pr.assignValues
-	_spec.ScanValues = pr.scanValues()
+	pa = &Patient{config: puo.config}
+	_spec.Assign = pa.assignValues
+	_spec.ScanValues = pa.scanValues()
 	if err = sqlgraph.UpdateNode(ctx, puo.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
-			err = &NotFoundError{pregnant.Label}
+			err = &NotFoundError{patient.Label}
 		} else if cerr, ok := isSQLConstraintError(err); ok {
 			err = cerr
 		}
 		return nil, err
 	}
-	return pr, nil
+	return pa, nil
 }

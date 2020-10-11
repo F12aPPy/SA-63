@@ -9,7 +9,7 @@ import (
 
 	"github.com/F12aPPy/app/ent/antenatal"
 	"github.com/F12aPPy/app/ent/babystatus"
-	"github.com/F12aPPy/app/ent/pregnant"
+	"github.com/F12aPPy/app/ent/patient"
 	"github.com/F12aPPy/app/ent/user"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
@@ -36,13 +36,13 @@ func (ac *AntenatalCreate) SetNillableADDEDTIME(t *time.Time) *AntenatalCreate {
 	return ac
 }
 
-// SetGETMOMID sets the GETMOM edge to Pregnant by id.
+// SetGETMOMID sets the GETMOM edge to Patient by id.
 func (ac *AntenatalCreate) SetGETMOMID(id int) *AntenatalCreate {
 	ac.mutation.SetGETMOMID(id)
 	return ac
 }
 
-// SetNillableGETMOMID sets the GETMOM edge to Pregnant by id if the given value is not nil.
+// SetNillableGETMOMID sets the GETMOM edge to Patient by id if the given value is not nil.
 func (ac *AntenatalCreate) SetNillableGETMOMID(id *int) *AntenatalCreate {
 	if id != nil {
 		ac = ac.SetGETMOMID(*id)
@@ -50,8 +50,8 @@ func (ac *AntenatalCreate) SetNillableGETMOMID(id *int) *AntenatalCreate {
 	return ac
 }
 
-// SetGETMOM sets the GETMOM edge to Pregnant.
-func (ac *AntenatalCreate) SetGETMOM(p *Pregnant) *AntenatalCreate {
+// SetGETMOM sets the GETMOM edge to Patient.
+func (ac *AntenatalCreate) SetGETMOM(p *Patient) *AntenatalCreate {
 	return ac.SetGETMOMID(p.ID)
 }
 
@@ -182,7 +182,7 @@ func (ac *AntenatalCreate) createSpec() (*Antenatal, *sqlgraph.CreateSpec) {
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: pregnant.FieldID,
+					Column: patient.FieldID,
 				},
 			},
 		}

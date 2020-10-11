@@ -10,7 +10,7 @@ import (
 
 	"github.com/F12aPPy/app/ent/antenatal"
 	"github.com/F12aPPy/app/ent/babystatus"
-	"github.com/F12aPPy/app/ent/pregnant"
+	"github.com/F12aPPy/app/ent/patient"
 	"github.com/F12aPPy/app/ent/user"
 
 	"github.com/facebookincubator/ent"
@@ -27,7 +27,7 @@ const (
 	// Node types.
 	TypeAntenatal  = "Antenatal"
 	TypeBabystatus = "Babystatus"
-	TypePregnant   = "Pregnant"
+	TypePatient    = "Patient"
 	TypeUser       = "User"
 )
 
@@ -166,12 +166,12 @@ func (m *AntenatalMutation) ResetADDEDTIME() {
 	m._ADDED_TIME = nil
 }
 
-// SetGETMOMID sets the GETMOM edge to Pregnant by id.
+// SetGETMOMID sets the GETMOM edge to Patient by id.
 func (m *AntenatalMutation) SetGETMOMID(id int) {
 	m._GETMOM = &id
 }
 
-// ClearGETMOM clears the GETMOM edge to Pregnant.
+// ClearGETMOM clears the GETMOM edge to Patient.
 func (m *AntenatalMutation) ClearGETMOM() {
 	m.cleared_GETMOM = true
 }
@@ -879,34 +879,34 @@ func (m *BabystatusMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown Babystatus edge %s", name)
 }
 
-// PregnantMutation represents an operation that mutate the Pregnants
+// PatientMutation represents an operation that mutate the Patients
 // nodes in the graph.
-type PregnantMutation struct {
+type PatientMutation struct {
 	config
-	op               Op
-	typ              string
-	id               *int
-	_PREGNANT_NAME   *string
-	_PREGNANT_AGE    *int
-	add_PREGNANT_AGE *int
-	clearedFields    map[string]struct{}
-	_SETMOM          map[int]struct{}
-	removed_SETMOM   map[int]struct{}
-	done             bool
-	oldValue         func(context.Context) (*Pregnant, error)
+	op             Op
+	typ            string
+	id             *int
+	patient_name   *string
+	patient_age    *int
+	addpatient_age *int
+	clearedFields  map[string]struct{}
+	_SETMOM        map[int]struct{}
+	removed_SETMOM map[int]struct{}
+	done           bool
+	oldValue       func(context.Context) (*Patient, error)
 }
 
-var _ ent.Mutation = (*PregnantMutation)(nil)
+var _ ent.Mutation = (*PatientMutation)(nil)
 
-// pregnantOption allows to manage the mutation configuration using functional options.
-type pregnantOption func(*PregnantMutation)
+// patientOption allows to manage the mutation configuration using functional options.
+type patientOption func(*PatientMutation)
 
-// newPregnantMutation creates new mutation for $n.Name.
-func newPregnantMutation(c config, op Op, opts ...pregnantOption) *PregnantMutation {
-	m := &PregnantMutation{
+// newPatientMutation creates new mutation for $n.Name.
+func newPatientMutation(c config, op Op, opts ...patientOption) *PatientMutation {
+	m := &PatientMutation{
 		config:        c,
 		op:            op,
-		typ:           TypePregnant,
+		typ:           TypePatient,
 		clearedFields: make(map[string]struct{}),
 	}
 	for _, opt := range opts {
@@ -915,20 +915,20 @@ func newPregnantMutation(c config, op Op, opts ...pregnantOption) *PregnantMutat
 	return m
 }
 
-// withPregnantID sets the id field of the mutation.
-func withPregnantID(id int) pregnantOption {
-	return func(m *PregnantMutation) {
+// withPatientID sets the id field of the mutation.
+func withPatientID(id int) patientOption {
+	return func(m *PatientMutation) {
 		var (
 			err   error
 			once  sync.Once
-			value *Pregnant
+			value *Patient
 		)
-		m.oldValue = func(ctx context.Context) (*Pregnant, error) {
+		m.oldValue = func(ctx context.Context) (*Patient, error) {
 			once.Do(func() {
 				if m.done {
 					err = fmt.Errorf("querying old values post mutation is not allowed")
 				} else {
-					value, err = m.Client().Pregnant.Get(ctx, id)
+					value, err = m.Client().Patient.Get(ctx, id)
 				}
 			})
 			return value, err
@@ -937,10 +937,10 @@ func withPregnantID(id int) pregnantOption {
 	}
 }
 
-// withPregnant sets the old Pregnant of the mutation.
-func withPregnant(node *Pregnant) pregnantOption {
-	return func(m *PregnantMutation) {
-		m.oldValue = func(context.Context) (*Pregnant, error) {
+// withPatient sets the old Patient of the mutation.
+func withPatient(node *Patient) patientOption {
+	return func(m *PatientMutation) {
+		m.oldValue = func(context.Context) (*Patient, error) {
 			return node, nil
 		}
 		m.id = &node.ID
@@ -949,7 +949,7 @@ func withPregnant(node *Pregnant) pregnantOption {
 
 // Client returns a new `ent.Client` from the mutation. If the mutation was
 // executed in a transaction (ent.Tx), a transactional client is returned.
-func (m PregnantMutation) Client() *Client {
+func (m PatientMutation) Client() *Client {
 	client := &Client{config: m.config}
 	client.init()
 	return client
@@ -957,7 +957,7 @@ func (m PregnantMutation) Client() *Client {
 
 // Tx returns an `ent.Tx` for mutations that were executed in transactions;
 // it returns an error otherwise.
-func (m PregnantMutation) Tx() (*Tx, error) {
+func (m PatientMutation) Tx() (*Tx, error) {
 	if _, ok := m.driver.(*txDriver); !ok {
 		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
 	}
@@ -968,109 +968,109 @@ func (m PregnantMutation) Tx() (*Tx, error) {
 
 // ID returns the id value in the mutation. Note that, the id
 // is available only if it was provided to the builder.
-func (m *PregnantMutation) ID() (id int, exists bool) {
+func (m *PatientMutation) ID() (id int, exists bool) {
 	if m.id == nil {
 		return
 	}
 	return *m.id, true
 }
 
-// SetPREGNANTNAME sets the PREGNANT_NAME field.
-func (m *PregnantMutation) SetPREGNANTNAME(s string) {
-	m._PREGNANT_NAME = &s
+// SetPatientName sets the patient_name field.
+func (m *PatientMutation) SetPatientName(s string) {
+	m.patient_name = &s
 }
 
-// PREGNANTNAME returns the PREGNANT_NAME value in the mutation.
-func (m *PregnantMutation) PREGNANTNAME() (r string, exists bool) {
-	v := m._PREGNANT_NAME
+// PatientName returns the patient_name value in the mutation.
+func (m *PatientMutation) PatientName() (r string, exists bool) {
+	v := m.patient_name
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldPREGNANTNAME returns the old PREGNANT_NAME value of the Pregnant.
-// If the Pregnant object wasn't provided to the builder, the object is fetched
+// OldPatientName returns the old patient_name value of the Patient.
+// If the Patient object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *PregnantMutation) OldPREGNANTNAME(ctx context.Context) (v string, err error) {
+func (m *PatientMutation) OldPatientName(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldPREGNANTNAME is allowed only on UpdateOne operations")
+		return v, fmt.Errorf("OldPatientName is allowed only on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldPREGNANTNAME requires an ID field in the mutation")
+		return v, fmt.Errorf("OldPatientName requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPREGNANTNAME: %w", err)
+		return v, fmt.Errorf("querying old value for OldPatientName: %w", err)
 	}
-	return oldValue.PREGNANTNAME, nil
+	return oldValue.PatientName, nil
 }
 
-// ResetPREGNANTNAME reset all changes of the "PREGNANT_NAME" field.
-func (m *PregnantMutation) ResetPREGNANTNAME() {
-	m._PREGNANT_NAME = nil
+// ResetPatientName reset all changes of the "patient_name" field.
+func (m *PatientMutation) ResetPatientName() {
+	m.patient_name = nil
 }
 
-// SetPREGNANTAGE sets the PREGNANT_AGE field.
-func (m *PregnantMutation) SetPREGNANTAGE(i int) {
-	m._PREGNANT_AGE = &i
-	m.add_PREGNANT_AGE = nil
+// SetPatientAge sets the patient_age field.
+func (m *PatientMutation) SetPatientAge(i int) {
+	m.patient_age = &i
+	m.addpatient_age = nil
 }
 
-// PREGNANTAGE returns the PREGNANT_AGE value in the mutation.
-func (m *PregnantMutation) PREGNANTAGE() (r int, exists bool) {
-	v := m._PREGNANT_AGE
+// PatientAge returns the patient_age value in the mutation.
+func (m *PatientMutation) PatientAge() (r int, exists bool) {
+	v := m.patient_age
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldPREGNANTAGE returns the old PREGNANT_AGE value of the Pregnant.
-// If the Pregnant object wasn't provided to the builder, the object is fetched
+// OldPatientAge returns the old patient_age value of the Patient.
+// If the Patient object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *PregnantMutation) OldPREGNANTAGE(ctx context.Context) (v int, err error) {
+func (m *PatientMutation) OldPatientAge(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldPREGNANTAGE is allowed only on UpdateOne operations")
+		return v, fmt.Errorf("OldPatientAge is allowed only on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldPREGNANTAGE requires an ID field in the mutation")
+		return v, fmt.Errorf("OldPatientAge requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPREGNANTAGE: %w", err)
+		return v, fmt.Errorf("querying old value for OldPatientAge: %w", err)
 	}
-	return oldValue.PREGNANTAGE, nil
+	return oldValue.PatientAge, nil
 }
 
-// AddPREGNANTAGE adds i to PREGNANT_AGE.
-func (m *PregnantMutation) AddPREGNANTAGE(i int) {
-	if m.add_PREGNANT_AGE != nil {
-		*m.add_PREGNANT_AGE += i
+// AddPatientAge adds i to patient_age.
+func (m *PatientMutation) AddPatientAge(i int) {
+	if m.addpatient_age != nil {
+		*m.addpatient_age += i
 	} else {
-		m.add_PREGNANT_AGE = &i
+		m.addpatient_age = &i
 	}
 }
 
-// AddedPREGNANTAGE returns the value that was added to the PREGNANT_AGE field in this mutation.
-func (m *PregnantMutation) AddedPREGNANTAGE() (r int, exists bool) {
-	v := m.add_PREGNANT_AGE
+// AddedPatientAge returns the value that was added to the patient_age field in this mutation.
+func (m *PatientMutation) AddedPatientAge() (r int, exists bool) {
+	v := m.addpatient_age
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ResetPREGNANTAGE reset all changes of the "PREGNANT_AGE" field.
-func (m *PregnantMutation) ResetPREGNANTAGE() {
-	m._PREGNANT_AGE = nil
-	m.add_PREGNANT_AGE = nil
+// ResetPatientAge reset all changes of the "patient_age" field.
+func (m *PatientMutation) ResetPatientAge() {
+	m.patient_age = nil
+	m.addpatient_age = nil
 }
 
 // AddSETMOMIDs adds the SETMOM edge to Antenatal by ids.
-func (m *PregnantMutation) AddSETMOMIDs(ids ...int) {
+func (m *PatientMutation) AddSETMOMIDs(ids ...int) {
 	if m._SETMOM == nil {
 		m._SETMOM = make(map[int]struct{})
 	}
@@ -1080,7 +1080,7 @@ func (m *PregnantMutation) AddSETMOMIDs(ids ...int) {
 }
 
 // RemoveSETMOMIDs removes the SETMOM edge to Antenatal by ids.
-func (m *PregnantMutation) RemoveSETMOMIDs(ids ...int) {
+func (m *PatientMutation) RemoveSETMOMIDs(ids ...int) {
 	if m.removed_SETMOM == nil {
 		m.removed_SETMOM = make(map[int]struct{})
 	}
@@ -1090,7 +1090,7 @@ func (m *PregnantMutation) RemoveSETMOMIDs(ids ...int) {
 }
 
 // RemovedSETMOM returns the removed ids of SETMOM.
-func (m *PregnantMutation) RemovedSETMOMIDs() (ids []int) {
+func (m *PatientMutation) RemovedSETMOMIDs() (ids []int) {
 	for id := range m.removed_SETMOM {
 		ids = append(ids, id)
 	}
@@ -1098,7 +1098,7 @@ func (m *PregnantMutation) RemovedSETMOMIDs() (ids []int) {
 }
 
 // SETMOMIDs returns the SETMOM ids in the mutation.
-func (m *PregnantMutation) SETMOMIDs() (ids []int) {
+func (m *PatientMutation) SETMOMIDs() (ids []int) {
 	for id := range m._SETMOM {
 		ids = append(ids, id)
 	}
@@ -1106,31 +1106,31 @@ func (m *PregnantMutation) SETMOMIDs() (ids []int) {
 }
 
 // ResetSETMOM reset all changes of the "SETMOM" edge.
-func (m *PregnantMutation) ResetSETMOM() {
+func (m *PatientMutation) ResetSETMOM() {
 	m._SETMOM = nil
 	m.removed_SETMOM = nil
 }
 
 // Op returns the operation name.
-func (m *PregnantMutation) Op() Op {
+func (m *PatientMutation) Op() Op {
 	return m.op
 }
 
-// Type returns the node type of this mutation (Pregnant).
-func (m *PregnantMutation) Type() string {
+// Type returns the node type of this mutation (Patient).
+func (m *PatientMutation) Type() string {
 	return m.typ
 }
 
 // Fields returns all fields that were changed during
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
-func (m *PregnantMutation) Fields() []string {
+func (m *PatientMutation) Fields() []string {
 	fields := make([]string, 0, 2)
-	if m._PREGNANT_NAME != nil {
-		fields = append(fields, pregnant.FieldPREGNANTNAME)
+	if m.patient_name != nil {
+		fields = append(fields, patient.FieldPatientName)
 	}
-	if m._PREGNANT_AGE != nil {
-		fields = append(fields, pregnant.FieldPREGNANTAGE)
+	if m.patient_age != nil {
+		fields = append(fields, patient.FieldPatientAge)
 	}
 	return fields
 }
@@ -1138,12 +1138,12 @@ func (m *PregnantMutation) Fields() []string {
 // Field returns the value of a field with the given name.
 // The second boolean value indicates that this field was
 // not set, or was not define in the schema.
-func (m *PregnantMutation) Field(name string) (ent.Value, bool) {
+func (m *PatientMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case pregnant.FieldPREGNANTNAME:
-		return m.PREGNANTNAME()
-	case pregnant.FieldPREGNANTAGE:
-		return m.PREGNANTAGE()
+	case patient.FieldPatientName:
+		return m.PatientName()
+	case patient.FieldPatientAge:
+		return m.PatientAge()
 	}
 	return nil, false
 }
@@ -1151,45 +1151,45 @@ func (m *PregnantMutation) Field(name string) (ent.Value, bool) {
 // OldField returns the old value of the field from the database.
 // An error is returned if the mutation operation is not UpdateOne,
 // or the query to the database was failed.
-func (m *PregnantMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+func (m *PatientMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case pregnant.FieldPREGNANTNAME:
-		return m.OldPREGNANTNAME(ctx)
-	case pregnant.FieldPREGNANTAGE:
-		return m.OldPREGNANTAGE(ctx)
+	case patient.FieldPatientName:
+		return m.OldPatientName(ctx)
+	case patient.FieldPatientAge:
+		return m.OldPatientAge(ctx)
 	}
-	return nil, fmt.Errorf("unknown Pregnant field %s", name)
+	return nil, fmt.Errorf("unknown Patient field %s", name)
 }
 
 // SetField sets the value for the given name. It returns an
 // error if the field is not defined in the schema, or if the
 // type mismatch the field type.
-func (m *PregnantMutation) SetField(name string, value ent.Value) error {
+func (m *PatientMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case pregnant.FieldPREGNANTNAME:
+	case patient.FieldPatientName:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetPREGNANTNAME(v)
+		m.SetPatientName(v)
 		return nil
-	case pregnant.FieldPREGNANTAGE:
+	case patient.FieldPatientAge:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetPREGNANTAGE(v)
+		m.SetPatientAge(v)
 		return nil
 	}
-	return fmt.Errorf("unknown Pregnant field %s", name)
+	return fmt.Errorf("unknown Patient field %s", name)
 }
 
 // AddedFields returns all numeric fields that were incremented
 // or decremented during this mutation.
-func (m *PregnantMutation) AddedFields() []string {
+func (m *PatientMutation) AddedFields() []string {
 	var fields []string
-	if m.add_PREGNANT_AGE != nil {
-		fields = append(fields, pregnant.FieldPREGNANTAGE)
+	if m.addpatient_age != nil {
+		fields = append(fields, patient.FieldPatientAge)
 	}
 	return fields
 }
@@ -1197,10 +1197,10 @@ func (m *PregnantMutation) AddedFields() []string {
 // AddedField returns the numeric value that was in/decremented
 // from a field with the given name. The second value indicates
 // that this field was not set, or was not define in the schema.
-func (m *PregnantMutation) AddedField(name string) (ent.Value, bool) {
+func (m *PatientMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
-	case pregnant.FieldPREGNANTAGE:
-		return m.AddedPREGNANTAGE()
+	case patient.FieldPatientAge:
+		return m.AddedPatientAge()
 	}
 	return nil, false
 }
@@ -1208,68 +1208,68 @@ func (m *PregnantMutation) AddedField(name string) (ent.Value, bool) {
 // AddField adds the value for the given name. It returns an
 // error if the field is not defined in the schema, or if the
 // type mismatch the field type.
-func (m *PregnantMutation) AddField(name string, value ent.Value) error {
+func (m *PatientMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case pregnant.FieldPREGNANTAGE:
+	case patient.FieldPatientAge:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.AddPREGNANTAGE(v)
+		m.AddPatientAge(v)
 		return nil
 	}
-	return fmt.Errorf("unknown Pregnant numeric field %s", name)
+	return fmt.Errorf("unknown Patient numeric field %s", name)
 }
 
 // ClearedFields returns all nullable fields that were cleared
 // during this mutation.
-func (m *PregnantMutation) ClearedFields() []string {
+func (m *PatientMutation) ClearedFields() []string {
 	return nil
 }
 
 // FieldCleared returns a boolean indicates if this field was
 // cleared in this mutation.
-func (m *PregnantMutation) FieldCleared(name string) bool {
+func (m *PatientMutation) FieldCleared(name string) bool {
 	_, ok := m.clearedFields[name]
 	return ok
 }
 
 // ClearField clears the value for the given name. It returns an
 // error if the field is not defined in the schema.
-func (m *PregnantMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown Pregnant nullable field %s", name)
+func (m *PatientMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Patient nullable field %s", name)
 }
 
 // ResetField resets all changes in the mutation regarding the
 // given field name. It returns an error if the field is not
 // defined in the schema.
-func (m *PregnantMutation) ResetField(name string) error {
+func (m *PatientMutation) ResetField(name string) error {
 	switch name {
-	case pregnant.FieldPREGNANTNAME:
-		m.ResetPREGNANTNAME()
+	case patient.FieldPatientName:
+		m.ResetPatientName()
 		return nil
-	case pregnant.FieldPREGNANTAGE:
-		m.ResetPREGNANTAGE()
+	case patient.FieldPatientAge:
+		m.ResetPatientAge()
 		return nil
 	}
-	return fmt.Errorf("unknown Pregnant field %s", name)
+	return fmt.Errorf("unknown Patient field %s", name)
 }
 
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
-func (m *PregnantMutation) AddedEdges() []string {
+func (m *PatientMutation) AddedEdges() []string {
 	edges := make([]string, 0, 1)
 	if m._SETMOM != nil {
-		edges = append(edges, pregnant.EdgeSETMOM)
+		edges = append(edges, patient.EdgeSETMOM)
 	}
 	return edges
 }
 
 // AddedIDs returns all ids (to other nodes) that were added for
 // the given edge name.
-func (m *PregnantMutation) AddedIDs(name string) []ent.Value {
+func (m *PatientMutation) AddedIDs(name string) []ent.Value {
 	switch name {
-	case pregnant.EdgeSETMOM:
+	case patient.EdgeSETMOM:
 		ids := make([]ent.Value, 0, len(m._SETMOM))
 		for id := range m._SETMOM {
 			ids = append(ids, id)
@@ -1281,19 +1281,19 @@ func (m *PregnantMutation) AddedIDs(name string) []ent.Value {
 
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
-func (m *PregnantMutation) RemovedEdges() []string {
+func (m *PatientMutation) RemovedEdges() []string {
 	edges := make([]string, 0, 1)
 	if m.removed_SETMOM != nil {
-		edges = append(edges, pregnant.EdgeSETMOM)
+		edges = append(edges, patient.EdgeSETMOM)
 	}
 	return edges
 }
 
 // RemovedIDs returns all ids (to other nodes) that were removed for
 // the given edge name.
-func (m *PregnantMutation) RemovedIDs(name string) []ent.Value {
+func (m *PatientMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
-	case pregnant.EdgeSETMOM:
+	case patient.EdgeSETMOM:
 		ids := make([]ent.Value, 0, len(m.removed_SETMOM))
 		for id := range m.removed_SETMOM {
 			ids = append(ids, id)
@@ -1305,14 +1305,14 @@ func (m *PregnantMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
-func (m *PregnantMutation) ClearedEdges() []string {
+func (m *PatientMutation) ClearedEdges() []string {
 	edges := make([]string, 0, 1)
 	return edges
 }
 
 // EdgeCleared returns a boolean indicates if this edge was
 // cleared in this mutation.
-func (m *PregnantMutation) EdgeCleared(name string) bool {
+func (m *PatientMutation) EdgeCleared(name string) bool {
 	switch name {
 	}
 	return false
@@ -1320,22 +1320,22 @@ func (m *PregnantMutation) EdgeCleared(name string) bool {
 
 // ClearEdge clears the value for the given name. It returns an
 // error if the edge name is not defined in the schema.
-func (m *PregnantMutation) ClearEdge(name string) error {
+func (m *PatientMutation) ClearEdge(name string) error {
 	switch name {
 	}
-	return fmt.Errorf("unknown Pregnant unique edge %s", name)
+	return fmt.Errorf("unknown Patient unique edge %s", name)
 }
 
 // ResetEdge resets all changes in the mutation regarding the
 // given edge name. It returns an error if the edge is not
 // defined in the schema.
-func (m *PregnantMutation) ResetEdge(name string) error {
+func (m *PatientMutation) ResetEdge(name string) error {
 	switch name {
-	case pregnant.EdgeSETMOM:
+	case patient.EdgeSETMOM:
 		m.ResetSETMOM()
 		return nil
 	}
-	return fmt.Errorf("unknown Pregnant edge %s", name)
+	return fmt.Errorf("unknown Patient edge %s", name)
 }
 
 // UserMutation represents an operation that mutate the Users

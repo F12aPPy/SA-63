@@ -6,29 +6,29 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/F12aPPy/app/ent/patient"
 	"github.com/F12aPPy/app/ent/predicate"
-	"github.com/F12aPPy/app/ent/pregnant"
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 )
 
-// PregnantDelete is the builder for deleting a Pregnant entity.
-type PregnantDelete struct {
+// PatientDelete is the builder for deleting a Patient entity.
+type PatientDelete struct {
 	config
 	hooks      []Hook
-	mutation   *PregnantMutation
-	predicates []predicate.Pregnant
+	mutation   *PatientMutation
+	predicates []predicate.Patient
 }
 
 // Where adds a new predicate to the delete builder.
-func (pd *PregnantDelete) Where(ps ...predicate.Pregnant) *PregnantDelete {
+func (pd *PatientDelete) Where(ps ...predicate.Patient) *PatientDelete {
 	pd.predicates = append(pd.predicates, ps...)
 	return pd
 }
 
 // Exec executes the deletion query and returns how many vertices were deleted.
-func (pd *PregnantDelete) Exec(ctx context.Context) (int, error) {
+func (pd *PatientDelete) Exec(ctx context.Context) (int, error) {
 	var (
 		err      error
 		affected int
@@ -37,7 +37,7 @@ func (pd *PregnantDelete) Exec(ctx context.Context) (int, error) {
 		affected, err = pd.sqlExec(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*PregnantMutation)
+			mutation, ok := m.(*PatientMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
 			}
@@ -57,7 +57,7 @@ func (pd *PregnantDelete) Exec(ctx context.Context) (int, error) {
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (pd *PregnantDelete) ExecX(ctx context.Context) int {
+func (pd *PatientDelete) ExecX(ctx context.Context) int {
 	n, err := pd.Exec(ctx)
 	if err != nil {
 		panic(err)
@@ -65,13 +65,13 @@ func (pd *PregnantDelete) ExecX(ctx context.Context) int {
 	return n
 }
 
-func (pd *PregnantDelete) sqlExec(ctx context.Context) (int, error) {
+func (pd *PatientDelete) sqlExec(ctx context.Context) (int, error) {
 	_spec := &sqlgraph.DeleteSpec{
 		Node: &sqlgraph.NodeSpec{
-			Table: pregnant.Table,
+			Table: patient.Table,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeInt,
-				Column: pregnant.FieldID,
+				Column: patient.FieldID,
 			},
 		},
 	}
@@ -85,25 +85,25 @@ func (pd *PregnantDelete) sqlExec(ctx context.Context) (int, error) {
 	return sqlgraph.DeleteNodes(ctx, pd.driver, _spec)
 }
 
-// PregnantDeleteOne is the builder for deleting a single Pregnant entity.
-type PregnantDeleteOne struct {
-	pd *PregnantDelete
+// PatientDeleteOne is the builder for deleting a single Patient entity.
+type PatientDeleteOne struct {
+	pd *PatientDelete
 }
 
 // Exec executes the deletion query.
-func (pdo *PregnantDeleteOne) Exec(ctx context.Context) error {
+func (pdo *PatientDeleteOne) Exec(ctx context.Context) error {
 	n, err := pdo.pd.Exec(ctx)
 	switch {
 	case err != nil:
 		return err
 	case n == 0:
-		return &NotFoundError{pregnant.Label}
+		return &NotFoundError{patient.Label}
 	default:
 		return nil
 	}
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (pdo *PregnantDeleteOne) ExecX(ctx context.Context) {
+func (pdo *PatientDeleteOne) ExecX(ctx context.Context) {
 	pdo.pd.ExecX(ctx)
 }

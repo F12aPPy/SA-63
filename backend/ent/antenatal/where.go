@@ -189,7 +189,7 @@ func HasGETMOM() predicate.Antenatal {
 }
 
 // HasGETMOMWith applies the HasEdge predicate on the "GETMOM" edge with a given conditions (other predicates).
-func HasGETMOMWith(preds ...predicate.Pregnant) predicate.Antenatal {
+func HasGETMOMWith(preds ...predicate.Patient) predicate.Antenatal {
 	return predicate.Antenatal(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),

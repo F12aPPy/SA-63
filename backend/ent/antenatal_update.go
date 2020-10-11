@@ -9,8 +9,8 @@ import (
 
 	"github.com/F12aPPy/app/ent/antenatal"
 	"github.com/F12aPPy/app/ent/babystatus"
+	"github.com/F12aPPy/app/ent/patient"
 	"github.com/F12aPPy/app/ent/predicate"
-	"github.com/F12aPPy/app/ent/pregnant"
 	"github.com/F12aPPy/app/ent/user"
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
@@ -45,13 +45,13 @@ func (au *AntenatalUpdate) SetNillableADDEDTIME(t *time.Time) *AntenatalUpdate {
 	return au
 }
 
-// SetGETMOMID sets the GETMOM edge to Pregnant by id.
+// SetGETMOMID sets the GETMOM edge to Patient by id.
 func (au *AntenatalUpdate) SetGETMOMID(id int) *AntenatalUpdate {
 	au.mutation.SetGETMOMID(id)
 	return au
 }
 
-// SetNillableGETMOMID sets the GETMOM edge to Pregnant by id if the given value is not nil.
+// SetNillableGETMOMID sets the GETMOM edge to Patient by id if the given value is not nil.
 func (au *AntenatalUpdate) SetNillableGETMOMID(id *int) *AntenatalUpdate {
 	if id != nil {
 		au = au.SetGETMOMID(*id)
@@ -59,8 +59,8 @@ func (au *AntenatalUpdate) SetNillableGETMOMID(id *int) *AntenatalUpdate {
 	return au
 }
 
-// SetGETMOM sets the GETMOM edge to Pregnant.
-func (au *AntenatalUpdate) SetGETMOM(p *Pregnant) *AntenatalUpdate {
+// SetGETMOM sets the GETMOM edge to Patient.
+func (au *AntenatalUpdate) SetGETMOM(p *Patient) *AntenatalUpdate {
 	return au.SetGETMOMID(p.ID)
 }
 
@@ -107,7 +107,7 @@ func (au *AntenatalUpdate) Mutation() *AntenatalMutation {
 	return au.mutation
 }
 
-// ClearGETMOM clears the GETMOM edge to Pregnant.
+// ClearGETMOM clears the GETMOM edge to Patient.
 func (au *AntenatalUpdate) ClearGETMOM() *AntenatalUpdate {
 	au.mutation.ClearGETMOM()
 	return au
@@ -212,7 +212,7 @@ func (au *AntenatalUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: pregnant.FieldID,
+					Column: patient.FieldID,
 				},
 			},
 		}
@@ -228,7 +228,7 @@ func (au *AntenatalUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: pregnant.FieldID,
+					Column: patient.FieldID,
 				},
 			},
 		}
@@ -339,13 +339,13 @@ func (auo *AntenatalUpdateOne) SetNillableADDEDTIME(t *time.Time) *AntenatalUpda
 	return auo
 }
 
-// SetGETMOMID sets the GETMOM edge to Pregnant by id.
+// SetGETMOMID sets the GETMOM edge to Patient by id.
 func (auo *AntenatalUpdateOne) SetGETMOMID(id int) *AntenatalUpdateOne {
 	auo.mutation.SetGETMOMID(id)
 	return auo
 }
 
-// SetNillableGETMOMID sets the GETMOM edge to Pregnant by id if the given value is not nil.
+// SetNillableGETMOMID sets the GETMOM edge to Patient by id if the given value is not nil.
 func (auo *AntenatalUpdateOne) SetNillableGETMOMID(id *int) *AntenatalUpdateOne {
 	if id != nil {
 		auo = auo.SetGETMOMID(*id)
@@ -353,8 +353,8 @@ func (auo *AntenatalUpdateOne) SetNillableGETMOMID(id *int) *AntenatalUpdateOne 
 	return auo
 }
 
-// SetGETMOM sets the GETMOM edge to Pregnant.
-func (auo *AntenatalUpdateOne) SetGETMOM(p *Pregnant) *AntenatalUpdateOne {
+// SetGETMOM sets the GETMOM edge to Patient.
+func (auo *AntenatalUpdateOne) SetGETMOM(p *Patient) *AntenatalUpdateOne {
 	return auo.SetGETMOMID(p.ID)
 }
 
@@ -401,7 +401,7 @@ func (auo *AntenatalUpdateOne) Mutation() *AntenatalMutation {
 	return auo.mutation
 }
 
-// ClearGETMOM clears the GETMOM edge to Pregnant.
+// ClearGETMOM clears the GETMOM edge to Patient.
 func (auo *AntenatalUpdateOne) ClearGETMOM() *AntenatalUpdateOne {
 	auo.mutation.ClearGETMOM()
 	return auo
@@ -504,7 +504,7 @@ func (auo *AntenatalUpdateOne) sqlSave(ctx context.Context) (a *Antenatal, err e
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: pregnant.FieldID,
+					Column: patient.FieldID,
 				},
 			},
 		}
@@ -520,7 +520,7 @@ func (auo *AntenatalUpdateOne) sqlSave(ctx context.Context) (a *Antenatal, err e
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: pregnant.FieldID,
+					Column: patient.FieldID,
 				},
 			},
 		}

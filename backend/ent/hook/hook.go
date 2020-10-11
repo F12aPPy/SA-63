@@ -35,15 +35,15 @@ func (f BabystatusFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, 
 	return f(ctx, mv)
 }
 
-// The PregnantFunc type is an adapter to allow the use of ordinary
-// function as Pregnant mutator.
-type PregnantFunc func(context.Context, *ent.PregnantMutation) (ent.Value, error)
+// The PatientFunc type is an adapter to allow the use of ordinary
+// function as Patient mutator.
+type PatientFunc func(context.Context, *ent.PatientMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f PregnantFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.PregnantMutation)
+func (f PatientFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.PatientMutation)
 	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PregnantMutation", m)
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PatientMutation", m)
 	}
 	return f(ctx, mv)
 }

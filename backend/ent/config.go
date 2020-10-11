@@ -26,7 +26,7 @@ type config struct {
 type hooks struct {
 	Antenatal  []ent.Hook
 	Babystatus []ent.Hook
-	Pregnant   []ent.Hook
+	Patient    []ent.Hook
 	User       []ent.Hook
 }
 
