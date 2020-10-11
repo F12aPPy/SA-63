@@ -70,7 +70,7 @@ func main() {
 
 	v1 := router.Group("/api/v1")
 	controllers.NewUserController(v1, client)
-	controllers.NewPregnantController(v1, client)
+	controllers.NewPatientController(v1, client)
 	controllers.NewBabystatusController(v1, client)
 	controllers.NewAntenatalController(v1, client)
 
